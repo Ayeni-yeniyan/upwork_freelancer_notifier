@@ -1,4 +1,4 @@
-package com.example.upwork_freelancer_notifier
+package com.notifyme.app
 
 import io.flutter.embedding.android.FlutterActivity
 

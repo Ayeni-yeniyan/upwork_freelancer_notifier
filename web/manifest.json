@@ -1,6 +1,6 @@
 {
-    "name": "upwork_freelancer_notifier",
-    "short_name": "upwork_freelancer_notifier",
+    "name": "notifyme",
+    "short_name": "notifyme",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

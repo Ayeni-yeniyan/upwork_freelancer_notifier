@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:upwork_freelancer_notifier/app/app.bottomsheets.dart';
-import 'package:upwork_freelancer_notifier/app/app.locator.dart';
-import 'package:upwork_freelancer_notifier/ui/common/app_strings.dart';
-import 'package:upwork_freelancer_notifier/ui/views/home/home_viewmodel.dart';
+import 'package:notifyme/app/app.bottomsheets.dart';
+import 'package:notifyme/app/app.locator.dart';
+import 'package:notifyme/ui/common/app_strings.dart';
+import 'package:notifyme/ui/views/home/home_viewmodel.dart';
 
 import '../helpers/test_helpers.dart';
 

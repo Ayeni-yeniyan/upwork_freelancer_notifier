@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "298576900475",
+    "project_id": "notify-me-job-notifier",
+    "storage_bucket": "notify-me-job-notifier.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298576900475:android:61f47cbf33d6d750430dde",
+        "android_client_info": {
+          "package_name": "com.notifyme.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI-M_0x40bYKikdxurUwi-qkddbK6XQU4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

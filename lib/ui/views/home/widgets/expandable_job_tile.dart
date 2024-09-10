@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:upwork_freelancer_notifier/core/app_decoration.dart';
-import 'package:upwork_freelancer_notifier/ui/common/ui_helpers.dart';
+import 'package:notifyme/core/models/job.dart';
+import 'package:notifyme/core/theme/app_decoration.dart';
+import 'package:notifyme/ui/common/ui_helpers.dart';
 
 class ExpandableJobTile extends StatefulWidget {
-  const ExpandableJobTile({
+  final Job? jobMobel;
+  const ExpandableJobTile(
+    this.jobMobel, {
     super.key,
   });
 
@@ -18,23 +21,28 @@ class _ExpandableJobTileState extends State<ExpandableJobTile>
   bool _isExpanded = false;
   @override
   void initState() {
+    _initAnimation();
+    super.initState();
+  }
+
+  void _initAnimation() {
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
     _animation = Tween<double>(begin: 0, end: .9).animate(_controller)
       ..addListener(
         () {
-          print(_animation.value);
           setState(() {});
         },
       );
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      decoration: const BoxDecoration(),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(5),
+      decoration: AppDecoration.jobTileDecor,
       child: Column(
         children: [
           Row(
@@ -59,51 +67,54 @@ class _ExpandableJobTileState extends State<ExpandableJobTile>
               const Text('date'),
             ],
           ),
-          if (_isExpanded) ...[
-            Row(
+          if (_isExpanded)
+            Column(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: AppDecoration.skillDecor,
-                  child: const Text('job type'),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: AppDecoration.skillDecor,
+                      child: const Text('job type'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: AppDecoration.skillDecor,
+                      child: const Text('contractor type'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: AppDecoration.skillDecor,
+                      child: const Text('duration'),
+                    ),
+                  ],
                 ),
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: AppDecoration.skillDecor,
-                  child: const Text('contractor type'),
+                const Text('Full data'),
+                const Text('description'),
+                Row(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.all(15),
+                        decoration: AppDecoration.skillDecor,
+                        child: const Text('skills')),
+                  ],
                 ),
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: AppDecoration.skillDecor,
-                  child: const Text('duration'),
+                Wrap(
+                  children: [
+                    'Payment stat',
+                    'rating',
+                    'amount spent',
+                    'country',
+                  ]
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(e),
+                          ))
+                      .toList(),
                 ),
+                const Text('proposal'),
               ],
             ),
-            const Text('Full data'),
-            const Text('description'),
-            Row(
-              children: [
-                Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: AppDecoration.skillDecor,
-                    child: const Text('skills')),
-              ],
-            ),
-            Wrap(
-              children: [
-                'Payment stat',
-                'rating',
-                'amount spent',
-                'country',
-              ]
-                  .map((e) => Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(e),
-                      ))
-                  .toList(),
-            ),
-            const Text('proposal'),
-          ]
         ],
       ),
     );

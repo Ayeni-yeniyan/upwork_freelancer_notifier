@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:notifyme/core/theme/app_textstyle.dart';
 import 'package:stacked/stacked.dart';
-import 'package:upwork_freelancer_notifier/ui/common/ui_helpers.dart';
+import 'package:notifyme/ui/common/ui_helpers.dart';
 
 import 'startup_viewmodel.dart';
 
@@ -14,26 +15,26 @@ class StartupView extends StackedView<StartupViewModel> {
     StartupViewModel viewModel,
     Widget? child,
   ) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'UPWORK NOTIFIER',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
+              'NOTIFYME',
+              style: AppTextstyle.labelTextStyle,
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Loading ...', style: TextStyle(fontSize: 16)),
+                Text('Loading ...', style: AppTextstyle.bodyTextStyleMedium),
                 horizontalSpaceSmall,
-                SizedBox(
+                const SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(
                     color: Colors.black,
-                    strokeWidth: 6,
+                    strokeWidth: 5,
                   ),
                 )
               ],

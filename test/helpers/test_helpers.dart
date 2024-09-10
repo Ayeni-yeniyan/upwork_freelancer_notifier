@@ -1,8 +1,12 @@
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:upwork_freelancer_notifier/app/app.locator.dart';
+import 'package:notifyme/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
-import 'package:upwork_freelancer_notifier/services/scraper_service.dart';
+import 'package:notifyme/services/scraper_service.dart';
+import 'package:notifyme/services/api_service.dart';
+import 'package:notifyme/services/job_service.dart';
+import 'package:notifyme/services/notification_service.dart';
+import 'package:notifyme/services/local_db_service.dart';
 // @stacked-import
 
 import 'test_helpers.mocks.dart';
@@ -12,6 +16,10 @@ import 'test_helpers.mocks.dart';
   MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<ScraperService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<ApiService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<JobService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<NotificationService>(onMissingStub: OnMissingStub.returnDefault),
+  MockSpec<LocalDbService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
 void registerServices() {
@@ -19,6 +27,11 @@ void registerServices() {
   getAndRegisterBottomSheetService();
   getAndRegisterDialogService();
   getAndRegisterScraperService();
+  getAndRegisterApiService();
+  getAndRegisterJobService();
+  getAndRegisterNotificationService();
+  getAndRegisterNotificationService();
+  getAndRegisterLocalDbService();
 // @stacked-mock-register
 }
 
@@ -76,6 +89,41 @@ MockScraperService getAndRegisterScraperService() {
   _removeRegistrationIfExists<ScraperService>();
   final service = MockScraperService();
   locator.registerSingleton<ScraperService>(service);
+  return service;
+}
+
+MockApiService getAndRegisterApiService() {
+  _removeRegistrationIfExists<ApiService>();
+  final service = MockApiService();
+  locator.registerSingleton<ApiService>(service);
+  return service;
+}
+
+MockJobService getAndRegisterJobService() {
+  _removeRegistrationIfExists<JobService>();
+  final service = MockJobService();
+  locator.registerSingleton<JobService>(service);
+  return service;
+}
+
+MockNotificationService getAndRegisterNotificationService() {
+  _removeRegistrationIfExists<NotificationService>();
+  final service = MockNotificationService();
+  locator.registerSingleton<NotificationService>(service);
+  return service;
+}
+
+MockNotificationService getAndRegisterNotificationService() {
+  _removeRegistrationIfExists<NotificationService>();
+  final service = MockNotificationService();
+  locator.registerSingleton<NotificationService>(service);
+  return service;
+}
+
+MockLocalDbService getAndRegisterLocalDbService() {
+  _removeRegistrationIfExists<LocalDbService>();
+  final service = MockLocalDbService();
+  locator.registerSingleton<LocalDbService>(service);
   return service;
 }
 // @stacked-mock-create

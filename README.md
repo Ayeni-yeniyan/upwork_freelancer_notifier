@@ -1,3 +1,3 @@
-# upwork_freelancer_notifier
+# notifyme
 
 A new Flutter project.

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:upwork_freelancer_notifier/app/app.bottomsheets.dart';
-import 'package:upwork_freelancer_notifier/app/app.dialogs.dart';
-import 'package:upwork_freelancer_notifier/app/app.locator.dart';
-import 'package:upwork_freelancer_notifier/app/app.router.dart';
+import 'package:notifyme/app/app.bottomsheets.dart';
+import 'package:notifyme/app/app.dialogs.dart';
+import 'package:notifyme/app/app.locator.dart';
+import 'package:notifyme/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {

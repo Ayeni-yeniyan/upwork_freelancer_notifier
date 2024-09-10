@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "upwork_freelancer_notifier" "\0"
+            VALUE "FileDescription", "notifyme" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "upwork_freelancer_notifier" "\0"
+            VALUE "InternalName", "notifyme" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "upwork_freelancer_notifier.exe" "\0"
-            VALUE "ProductName", "upwork_freelancer_notifier" "\0"
+            VALUE "OriginalFilename", "notifyme.exe" "\0"
+            VALUE "ProductName", "notifyme" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
