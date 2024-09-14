@@ -16,33 +16,21 @@ class JobListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-        viewModelBuilder: () => locator<HomeViewModel>(),
-        builder: (context, viewModel, child) {
-          return BaseScaffold(
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Job List',
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                Divider(
-                  thickness: 3,
-                  color: AppPallete.green,
-                ),
-                verticalSpaceTiny,
-                const ExpandableJobTile(null),
-                const ExpandableJobTile(null),
-                IconButton(
-                  onPressed: viewModel.reloadUrl,
-                  icon: const Icon(Icons.restore),
-                )
-              ],
-            ),
-          );
-        });
+      viewModelBuilder: () => locator<HomeViewModel>(),
+      builder: (context, viewModel, child) {
+        return BaseScaffold(
+          appBar: AppBar(
+            title: const Text('Job List'),
+          ),
+          body: ListView.separated(
+            itemCount:
+                viewModel.jobsList.isEmpty ? 0 : viewModel.jobsList.length,
+            itemBuilder: (context, index) =>
+                ExpandableJobTile(viewModel.jobsList[index]),
+            separatorBuilder: (context, index) => verticalSpaceTiny,
+          ),
+        );
+      },
+    );
   }
 }

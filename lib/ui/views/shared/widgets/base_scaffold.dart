@@ -16,7 +16,7 @@ class BaseScaffold extends StatelessWidget {
     this.appBar,
     this.floatingActionButton,
     required this.body,
-    this.padding = const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+    this.padding = const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
   });
 
   @override

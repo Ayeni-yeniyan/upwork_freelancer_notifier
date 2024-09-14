@@ -26,7 +26,9 @@ class ScraperService {
             'error';
         final time = item
                 .find('span', class_: 'text-caption text-light-on-inverse')
-                ?.text ??
+                ?.text
+                .replaceAll('Posted', '')
+                .trim() ??
             'error';
         final paymentStat =
             item.find('strong', class_: 'text-light text-base-sm')?.text ?? '';
@@ -77,7 +79,7 @@ class ScraperService {
 
         jobList.add(newJob);
       }
-      return jobList;
+      return jobList.reversed.toList();
     } catch (e) {
       throw CustomException('An error occured');
     }

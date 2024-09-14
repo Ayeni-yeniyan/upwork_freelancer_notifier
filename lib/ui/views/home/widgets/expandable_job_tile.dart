@@ -4,7 +4,7 @@ import 'package:notifyme/core/theme/app_decoration.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 
 class ExpandableJobTile extends StatefulWidget {
-  final Job? jobMobel;
+  final Job jobMobel;
   const ExpandableJobTile(
     this.jobMobel, {
     super.key,
@@ -41,7 +41,6 @@ class _ExpandableJobTileState extends State<ExpandableJobTile>
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.all(5),
       decoration: AppDecoration.jobTileDecor,
       child: Column(
         children: [
@@ -62,57 +61,52 @@ class _ExpandableJobTileState extends State<ExpandableJobTile>
                 }),
               ),
               horizontalSpaceSmall,
-              const Text('Test Job title'),
-              const Spacer(),
-              const Text('date'),
+              Expanded(child: Text(widget.jobMobel.title)),
+              horizontalSpaceTiny,
+              Text(widget.jobMobel.time),
             ],
           ),
           if (_isExpanded)
             Column(
               children: [
                 Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: AppDecoration.skillDecor,
-                      child: const Text('job type'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: AppDecoration.skillDecor,
-                      child: const Text('contractor type'),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: AppDecoration.skillDecor,
-                      child: const Text('duration'),
-                    ),
-                  ],
-                ),
-                const Text('Full data'),
-                const Text('description'),
-                Row(
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.all(15),
-                        decoration: AppDecoration.skillDecor,
-                        child: const Text('skills')),
-                  ],
-                ),
-                Wrap(
-                  children: [
-                    'Payment stat',
-                    'rating',
-                    'amount spent',
-                    'country',
-                  ]
-                      .map((e) => Padding(
-                            padding: const EdgeInsets.all(8),
+                  children: [widget.jobMobel.budget]
+                      .map((e) => Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: AppDecoration.skillDecor,
                             child: Text(e),
                           ))
                       .toList(),
                 ),
-                const Text('proposal'),
+                Text(widget.jobMobel.description),
+                const Text('description'),
+                if (widget.jobMobel.skills != null)
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.jobMobel.skills!.length,
+                      itemBuilder: (context, index) => Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: AppDecoration.skillDecor,
+                          child: Text(widget.jobMobel.skills![index])),
+                    ),
+                  ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.jobMobel.paymentStat,
+                    widget.jobMobel.ratingStat,
+                    widget.jobMobel.amountSpent,
+                    widget.jobMobel.country,
+                  ]
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 3),
+                            child: Text(e),
+                          ))
+                      .toList(),
+                ),
+                Text(widget.jobMobel.proposals),
               ],
             ),
         ],

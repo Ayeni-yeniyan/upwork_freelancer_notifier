@@ -15,8 +15,7 @@ extension GetJobCollection on Isar {
 
 const JobSchema = CollectionSchema(
   name: r'Job',
-  id: 0,
-  // -5961302972855324388,
+  id: -5961302972855324388,
   properties: {
     r'amountSpent': PropertySchema(
       id: 0,

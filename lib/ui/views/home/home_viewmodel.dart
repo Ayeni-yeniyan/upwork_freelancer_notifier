@@ -1,43 +1,36 @@
+import 'dart:async';
+
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:notifyme/app/app.locator.dart';
+import 'package:notifyme/core/app_strings.dart';
 import 'package:notifyme/core/logger.dart';
+import 'package:notifyme/core/models/job.dart';
+import 'package:notifyme/services/job_service.dart';
 // import 'package:notifyme/app/app.bottomsheets.dart';
-// import 'package:notifyme/app/app.dialogs.dart';
-// import 'package:notifyme/app/app.locator.dart';
+import 'package:notifyme/app/app.dialogs.dart';
 // import 'package:notifyme/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 // import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
-  // final _dialogService = locator<DialogService>();
-  // final _bottomSheetService = locator<BottomSheetService>();
-  // final keepAlive = InAppWebViewKeepAlive();
+  bool _hasInitWebControllerView = false;
+  final _dialogService = locator<DialogService>();
+  // final _navigator = locator<NavigationService>();
+  final _jobService = locator<JobService>();
   InAppWebViewController? _upWorkcontroller;
-  // final _upworkNotifcontroller = WebViewController()
-  //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  //   ..setNavigationDelegate(
-  //     NavigationDelegate(
-  //       onProgress: (progress) {
-  //         // Update loading bar.
-  //       },
-  //       onPageStarted: (url) {},
-  //       onPageFinished: (url) {},
-  //       onHttpError: (error) {},
-  //       onWebResourceError: (error) {},
-  //       onNavigationRequest: (request) {
-  //         if (request.url.startsWith('https://www.youtube.com/')) {
-  //           return NavigationDecision.prevent;
-  //         }
-  //         return NavigationDecision.navigate;
-  //       },
-  //     ),
-  //   )
-  //   ..loadRequest(Uri.parse('https://flutter.dev'));
-  // WebViewController get upworkNotifcontroller => _upworkNotifcontroller;
-  // PullToRefreshController? _pullToRefreshController;
+  List<Job> get jobsList => _jobService.jobList;
 
+  Duration _duration = const Duration(seconds: 60);
   get getUpworkController => _upWorkcontroller;
   void setUpworkController(InAppWebViewController controller) async {
+    if (!_hasInitWebControllerView) {
+      changeIndex();
+      _dialogService.showCustomDialog(
+        variant: DialogType.loading,
+      );
+    }
     displayLog(await controller.getHtml() ?? 'Html string empty');
     displayLog('setting controller');
     _upWorkcontroller = controller;
@@ -48,7 +41,52 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  int _index = 0;
+  Timer? _timer;
+  void cancelTimer() {
+    _timer?.cancel();
+  }
+
+  void _activateTimer() {
+    _timer = Timer.periodic(_duration, (timer) {
+      _upWorkcontroller?.reload();
+    });
+  }
+
+  void onLoadCompleteUpwork(
+      InAppWebViewController controller, WebUri? uri) async {
+    if (_timer == null) {
+      _activateTimer();
+    }
+    final scroll = await controller.getContentHeight() ?? 100;
+    //  (await controller.getScrollY()) ?? 0 + 100;
+    // await controller.scrollBy(x: 0, y: scroll, animated: true);
+    await controller.scrollTo(x: 0, y: scroll ~/ 20, animated: true);
+    await Future.delayed(const Duration(seconds: 5));
+    final htmlText = await controller.getHtml();
+    displayLog(uri?.rawValue.toString());
+    // _upWorkcontroller = controller;
+    if (uri!.rawValue == AppStrings.upworkBestMatch) {
+      final newJobsAvailable = await _jobService.newJobsGotten(htmlText ?? '');
+      if (newJobsAvailable) {
+        // _jobsList.addAll(newJobsAvailable);
+        rebuildUi();
+        // locator<NotificationService>().showNotification(
+        //     id: 1, title: 'title', body: 'body', payload: 'payload');
+      } else {
+        displayLog('No Job updates.');
+      }
+      displayLog('url correct');
+    } else {
+      errorLog('url is not correct');
+    }
+    if (!_hasInitWebControllerView) {
+      _dialogService.completeDialog(DialogResponse());
+      _hasInitWebControllerView = true;
+      changeIndex();
+    }
+  }
+
+  int _index = 1;
   int get index => _index;
   set setCurrentIndex(int newIndex) {
     _index = newIndex;
@@ -60,6 +98,7 @@ class HomeViewModel extends BaseViewModel {
   // final freelancerWebview = InAppWebView();
 
   void changeIndex() {
+    infoLog('change index has been called');
     if (_index == 1) {
       setCurrentIndex = 0;
       return;

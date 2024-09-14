@@ -5,12 +5,26 @@ import 'package:notifyme/services/scraper_service.dart';
 
 class JobService {
   final scrapper = locator<ScraperService>();
-  Future<List<Job>> getJobUpdates(String html) async {
+  final List<Job> _jobList = [];
+  List<Job> get jobList => _jobList;
+  Future<bool> newJobsGotten(String html) async {
+    bool newJobsAvailable = false;
     try {
-      return await scrapper.upworkScrapper(html);
+      final jobs = await scrapper.upworkScrapper(html);
+      displayLog('Jobs Gotten! ${jobs.length}');
+      for (var element in jobs) {
+        if (!_jobList.any((e) => e.jobLink.trim() == element.jobLink.trim())) {
+          newJobsAvailable = true;
+          _jobList.insert(0, element);
+        } else {
+          errorLog('duplicate jobs detected');
+        }
+      }
+      // return await scrapper.upworkScrapper(html);
     } catch (e) {
       errorLog(e.toString());
     }
-    return [];
+    // return [];
+    return newJobsAvailable;
   }
 }
