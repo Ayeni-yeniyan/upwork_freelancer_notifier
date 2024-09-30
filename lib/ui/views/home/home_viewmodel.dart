@@ -25,11 +25,16 @@ class HomeViewModel extends BaseViewModel {
   Duration _duration = const Duration(seconds: 60);
   get getUpworkController => _upWorkcontroller;
   void setUpworkController(InAppWebViewController controller) async {
+    displayLog('_hasInitWebControllerView $_hasInitWebControllerView');
+    displayLog('_hasInitWebControllerView $_hasInitWebControllerView');
+    displayLog('_hasInitWebControllerView $_hasInitWebControllerView');
     if (!_hasInitWebControllerView) {
-      changeIndex();
-      _dialogService.showCustomDialog(
-        variant: DialogType.loading,
-      );
+      setCurrentIndex = 1;
+      await Future.delayed(const Duration(seconds: 1), () {
+        _dialogService.showCustomDialog(
+          variant: DialogType.loading,
+        );
+      });
     }
     displayLog(await controller.getHtml() ?? 'Html string empty');
     displayLog('setting controller');
@@ -61,7 +66,7 @@ class HomeViewModel extends BaseViewModel {
     //  (await controller.getScrollY()) ?? 0 + 100;
     // await controller.scrollBy(x: 0, y: scroll, animated: true);
     await controller.scrollTo(x: 0, y: scroll ~/ 20, animated: true);
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     final htmlText = await controller.getHtml();
     displayLog(uri?.rawValue.toString());
     // _upWorkcontroller = controller;
@@ -81,14 +86,17 @@ class HomeViewModel extends BaseViewModel {
     }
     if (!_hasInitWebControllerView) {
       _dialogService.completeDialog(DialogResponse());
+      displayLog('current $_index');
+      setCurrentIndex = 0;
+      displayLog('new $_index');
       _hasInitWebControllerView = true;
-      changeIndex();
     }
   }
 
-  int _index = 1;
+  int _index = 0;
   int get index => _index;
   set setCurrentIndex(int newIndex) {
+    infoLog('change index has been called to $newIndex');
     _index = newIndex;
     rebuildUi();
   }
@@ -98,7 +106,6 @@ class HomeViewModel extends BaseViewModel {
   // final freelancerWebview = InAppWebView();
 
   void changeIndex() {
-    infoLog('change index has been called');
     if (_index == 1) {
       setCurrentIndex = 0;
       return;
@@ -131,6 +138,4 @@ class HomeViewModel extends BaseViewModel {
   //     description: ksHomeBottomSheetDescription,
   //   );
   // }
-
-  Future<void> scrapperService() async {}
 }
