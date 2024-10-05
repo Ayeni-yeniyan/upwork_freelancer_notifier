@@ -1,3 +1,4 @@
+import 'package:notifyme/ui/views/update/update_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/app/app.router.dart';
@@ -8,11 +9,12 @@ class StartupViewModel extends BaseViewModel {
 
   // Place anything here that needs to happen before we get into the application
   Future runStartupLogic() async {
-    await Future.delayed(const Duration(seconds: 3));
+    // await Future.delayed(const Duration(seconds: 3));
 
-    // This is where you can make decisions on where your app should navigate when
-    // you have custom startup logic
+    // // This is where you can make decisions on where your app should navigate when
+    // // you have custom startup logic
 
-    _navigationService.replaceWithHomeView();
+    // _navigationService.replaceWithHomeView();
+    locator<UpdateViewModel>().getUpdate();
   }
 }

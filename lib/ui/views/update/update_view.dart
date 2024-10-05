@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/theme/app_textstyle.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 import 'package:notifyme/ui/views/shared/widgets/base_scaffold.dart';
@@ -31,7 +32,8 @@ class UpdateView extends StackedView<UpdateViewModel> {
           verticalSpaceLarge,
           Text(
             textAlign: TextAlign.center,
-            'Updates are important. They keep you safe, secured and in sync with the latest features aimed at helping you get the best out of your productive time.',
+            'Updates are important. '
+            'They keep you safe, secured and in sync with the latest features aimed at helping you get the best out of your productive time.',
             style: AppTextstyle.bodyTextStyle,
           ),
           verticalSpaceSmall,
@@ -53,5 +55,5 @@ class UpdateView extends StackedView<UpdateViewModel> {
   UpdateViewModel viewModelBuilder(
     BuildContext context,
   ) =>
-      UpdateViewModel();
+      locator<UpdateViewModel>();
 }

@@ -29,8 +29,11 @@ dependencies:
   # firebase backend
   firebase_core: ^3.3.0
   firebase_auth: ^5.1.4
+  cloud_firestore: ^5.4.3
   # Icon package
   font_awesome_flutter: ^10.7.0
+  # Functional programming
+  fpdart: ^1.1.0
   # local database
   isar: *isar_version
   isar_flutter_libs: *isar_version

@@ -30,7 +30,6 @@ import 'package:notifyme/ui/dialogs/loading/loading_dialog.dart';
     LazySingleton(classType: ApiService),
     LazySingleton(classType: JobService),
     LazySingleton(classType: NotificationService),
-    LazySingleton(classType: NotificationService),
     LazySingleton(classType: LocalDbService),
 // @stacked-service
   ],

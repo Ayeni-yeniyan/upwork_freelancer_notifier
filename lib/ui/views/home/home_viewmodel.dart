@@ -8,6 +8,7 @@ import 'package:notifyme/core/models/job.dart';
 import 'package:notifyme/services/job_service.dart';
 // import 'package:notifyme/app/app.bottomsheets.dart';
 import 'package:notifyme/app/app.dialogs.dart';
+import 'package:notifyme/services/notification_service.dart';
 // import 'package:notifyme/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -106,6 +107,8 @@ class HomeViewModel extends BaseViewModel {
   // final freelancerWebview = InAppWebView();
 
   void changeIndex() {
+    NotificationService.showNotification(
+        id: 1, title: 'title', body: 'body', payload: 'payload');
     if (_index == 1) {
       setCurrentIndex = 0;
       return;

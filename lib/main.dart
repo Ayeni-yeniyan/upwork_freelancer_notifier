@@ -3,7 +3,6 @@ import 'package:notifyme/app/app.bottomsheets.dart';
 import 'package:notifyme/app/app.dialogs.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/app/app.router.dart';
-import 'package:notifyme/services/notification_service.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 import 'init_dependencies.dart' as sl;
@@ -14,7 +13,6 @@ Future<void> main() async {
   setupDialogUi();
   setupBottomSheetUi();
   sl.initDependencies();
-  locator<NotificationService>().initNotification();
   runApp(const MainApp());
 }
 

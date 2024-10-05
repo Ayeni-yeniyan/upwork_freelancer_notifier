@@ -1,9 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
-  final _notifPlugin = FlutterLocalNotificationsPlugin();
-  Future<void> initNotification() async {
-    const initAndroidNotif = AndroidInitializationSettings('ic_launcher.png');
+  NotificationService._();
+  static final _notifPlugin = FlutterLocalNotificationsPlugin();
+  static Future<void> initNotification() async {
+    const initAndroidNotif = AndroidInitializationSettings('ic_launcher');
     const initIosNotif = DarwinInitializationSettings();
     const initializationSettings =
         InitializationSettings(android: initAndroidNotif, iOS: initIosNotif);
@@ -13,7 +14,7 @@ class NotificationService {
     );
   }
 
-  Future showNotification({
+  static Future showNotification({
     required int id,
     required String title,
     required String body,
