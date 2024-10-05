@@ -6,9 +6,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:notifyme/ui/views/login/login_view.dart';
 import 'package:notifyme/services/scraper_service.dart';
-import 'package:notifyme/services/api_service.dart';
 import 'package:notifyme/services/job_service.dart';
-import 'package:notifyme/services/notification_service.dart';
 import 'package:notifyme/ui/views/update/update_view.dart';
 import 'package:notifyme/services/local_db_service.dart';
 import 'package:notifyme/ui/dialogs/loading/loading_dialog.dart';
@@ -27,9 +25,7 @@ import 'package:notifyme/ui/dialogs/loading/loading_dialog.dart';
     LazySingleton(classType: DialogService),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: ScraperService),
-    LazySingleton(classType: ApiService),
     LazySingleton(classType: JobService),
-    LazySingleton(classType: NotificationService),
     LazySingleton(classType: LocalDbService),
 // @stacked-service
   ],

@@ -3,9 +3,7 @@ import 'package:mockito/mockito.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:notifyme/services/scraper_service.dart';
-import 'package:notifyme/services/api_service.dart';
 import 'package:notifyme/services/job_service.dart';
-import 'package:notifyme/services/notification_service.dart';
 import 'package:notifyme/services/local_db_service.dart';
 // @stacked-import
 
@@ -92,12 +90,7 @@ MockScraperService getAndRegisterScraperService() {
   return service;
 }
 
-MockApiService getAndRegisterApiService() {
-  _removeRegistrationIfExists<ApiService>();
-  final service = MockApiService();
-  locator.registerSingleton<ApiService>(service);
-  return service;
-}
+
 
 MockJobService getAndRegisterJobService() {
   _removeRegistrationIfExists<JobService>();
@@ -106,19 +99,9 @@ MockJobService getAndRegisterJobService() {
   return service;
 }
 
-MockNotificationService getAndRegisterNotificationService() {
-  _removeRegistrationIfExists<NotificationService>();
-  final service = MockNotificationService();
-  locator.registerSingleton<NotificationService>(service);
-  return service;
-}
 
-MockNotificationService getAndRegisterNotificationService() {
-  _removeRegistrationIfExists<NotificationService>();
-  final service = MockNotificationService();
-  locator.registerSingleton<NotificationService>(service);
-  return service;
-}
+
+
 
 MockLocalDbService getAndRegisterLocalDbService() {
   _removeRegistrationIfExists<LocalDbService>();
