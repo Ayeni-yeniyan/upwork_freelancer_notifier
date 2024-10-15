@@ -17,17 +17,34 @@ class JobListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       viewModelBuilder: () => locator<HomeViewModel>(),
+      disposeViewModel: false,
       builder: (context, viewModel, child) {
-        return BaseScaffold(
-          appBar: AppBar(
-            title: const Text('Job List'),
-          ),
-          body: ListView.separated(
-            itemCount:
-                viewModel.jobsList.isEmpty ? 0 : viewModel.jobsList.length,
-            itemBuilder: (context, index) =>
-                ExpandableJobTile(viewModel.jobsList[index]),
-            separatorBuilder: (context, index) => verticalSpaceTiny,
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Job List'),
+                const Text(
+                  'Get the latest job updates on your Upwork right here, right now.',
+                ),
+                const Text(
+                  'sort by | Time',
+                ), //payment verified,amount spent,budget
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: viewModel.jobsList.isEmpty
+                        ? 0
+                        : viewModel.jobsList.length,
+                    itemBuilder: (context, index) =>
+                        JobTile(viewModel.jobsList[index]),
+                    separatorBuilder: (context, index) => verticalSpaceSmall,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -90,18 +90,12 @@ MockScraperService getAndRegisterScraperService() {
   return service;
 }
 
-
-
 MockJobService getAndRegisterJobService() {
   _removeRegistrationIfExists<JobService>();
   final service = MockJobService();
   locator.registerSingleton<JobService>(service);
   return service;
 }
-
-
-
-
 
 MockLocalDbService getAndRegisterLocalDbService() {
   _removeRegistrationIfExists<LocalDbService>();

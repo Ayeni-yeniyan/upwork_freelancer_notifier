@@ -13,6 +13,7 @@ class WebviewWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
         viewModelBuilder: () => locator<HomeViewModel>(),
+        disposeViewModel: false,
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(

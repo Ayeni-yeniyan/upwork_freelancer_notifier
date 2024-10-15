@@ -114,3 +114,39 @@ class _ExpandableJobTileState extends State<ExpandableJobTile>
     );
   }
 }
+
+class JobTile extends StatelessWidget {
+  final Job jobMobel;
+  const JobTile(this.jobMobel, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100,
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5), color: Colors.amber),
+      child: Row(
+        children: [
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(jobMobel.title),
+            ],
+          )),
+          const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('22'),
+              Text('secs'),
+              Text('ago'),
+              // Icon(Icons.keyboard_arrow_down)
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

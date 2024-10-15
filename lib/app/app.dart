@@ -10,6 +10,8 @@ import 'package:notifyme/services/job_service.dart';
 import 'package:notifyme/ui/views/update/update_view.dart';
 import 'package:notifyme/services/local_db_service.dart';
 import 'package:notifyme/ui/dialogs/loading/loading_dialog.dart';
+import 'package:notifyme/ui/views/bottom_nav/bottom_nav_view.dart';
+import 'package:notifyme/ui/views/profile/profile_view.dart';
 // @stacked-import
 
 @StackedApp(
@@ -18,6 +20,8 @@ import 'package:notifyme/ui/dialogs/loading/loading_dialog.dart';
     MaterialRoute(page: StartupView),
     MaterialRoute(page: LoginView),
     MaterialRoute(page: UpdateView),
+    MaterialRoute(page: BottomNavView),
+    MaterialRoute(page: ProfileView),
 // @stacked-route
   ],
   dependencies: [
