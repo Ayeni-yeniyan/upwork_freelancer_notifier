@@ -10,12 +10,16 @@ class Job {
   final String title;
   final String time;
   final String paymentStat;
+  final String clientStat;
   final String country;
-  final String ratingStat;
-  final String amountSpent;
+  final double ratingStat;
+  final String clientTotalExpenditure;
   final String budget;
+  final String jobType;
+  final String contractorTier;
   final List<String>? skills;
   final String proposals;
+  final DateTime? dateTime;
   bool isViewed;
 
   Job({
@@ -26,10 +30,14 @@ class Job {
     required this.paymentStat,
     required this.country,
     required this.ratingStat,
-    required this.amountSpent,
+    required this.clientTotalExpenditure,
     required this.budget,
     required this.skills,
     required this.proposals,
+    required this.dateTime,
+    required this.clientStat,
+    required this.jobType,
+    required this.contractorTier,
     this.isViewed = false,
   });
   void toggleViewTrue() => isViewed = true;

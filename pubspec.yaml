@@ -38,6 +38,10 @@ dependencies:
   isar: *isar_version
   isar_flutter_libs: *isar_version
   path_provider: ^2.0.15
+  # Svg asset
+  flutter_svg: ^2.0.10+1
+  # Star rating package
+  flutter_rating_stars: ^1.1.0
 
 
 dev_dependencies:
@@ -50,4 +54,20 @@ dev_dependencies:
   isar_generator: *isar_version
 
 flutter:
+  assets:
+    - assets/images/
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Thin.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Black.ttf
+        - asset: assets/fonts/Poppins-BlackItalic.ttf
+          style: italic
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-BoldItalic.ttf
+          weight: 700
+          style: italic
+  
   uses-material-design: true

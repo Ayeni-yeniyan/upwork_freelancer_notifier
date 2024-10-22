@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notifyme/core/theme/app_pallete.dart';
 import 'package:notifyme/ui/views/home/screens/home_view.dart';
 import 'package:stacked/stacked.dart';
 
@@ -35,10 +36,26 @@ class BottomNavView extends StackedView<BottomNavViewModel> {
               right: 0,
               child: RectangleWithCircularCutWidget(),
             ),
-            const Positioned(
+            Positioned(
               bottom: 50,
-              child: CircleAvatar(
-                radius: 30,
+              child: GestureDetector(
+                // Add switch on logic
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppPallete.white.withOpacity(0.3),
+                      width: 4,
+                    ),
+                    color: AppPallete.red.withOpacity(0.5),
+                  ),
+                  child: const Icon(
+                    Icons.power_settings_new,
+                    size: 32,
+                  ),
+                ),
               ),
             ),
             Positioned(

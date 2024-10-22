@@ -13,6 +13,10 @@ class ScraperService {
       List<Job> jobList = [];
       for (var item in items) {
         infoLog('Started scraping ${item.text}');
+        final title = item
+                .find('h3', class_: 'my-0 p-sm-right job-tile-title text-base')
+                ?.text ??
+            'error';
         final description = item
                 .find('div',
                     class_:
@@ -20,10 +24,7 @@ class ScraperService {
                 ?.text ??
             'error';
         final jobLink = item.find('a')?.getAttrValue('href') ?? 'Link error';
-        final title = item
-                .find('h3', class_: 'my-0 p-sm-right job-tile-title text-base')
-                ?.text ??
-            'error';
+
         final time = item
                 .find('span', class_: 'text-caption text-light-on-inverse')
                 ?.text
@@ -49,6 +50,12 @@ class ScraperService {
                         'd-inline-block text-base-sm pr-6 pb-3 text-light pb-md-0')
                 ?.text ??
             'error';
+        final sm = item
+            .find('small',
+                class_: 'text-light display-inline-block text-caption')
+            ?.children
+            .map((e) => e.text)
+            .toList();
         final budget = item
                 .find('small',
                     class_: 'text-light display-inline-block text-caption')
@@ -64,21 +71,36 @@ class ScraperService {
                 ?.text ??
             'error';
         final newJob = Job(
-          description: description,
-          jobLink: jobLink,
-          title: title,
-          time: time,
-          paymentStat: paymentStat,
-          country: country,
-          ratingStat: ratingStat,
-          amountSpent: amountSpent,
-          budget: budget,
+          description:
+              description.replaceAll(' more  about "$title"', '').trim(),
+          jobLink: jobLink.trim(),
+          jobType: sm?[0].trim() ?? '',
+          contractorTier: sm?[1].replaceAll('-', '').trim() ?? '',
+          clientStat: budget.trim(),
+          title: title.trim(),
+          time: time.trim(),
+          paymentStat: paymentStat.trim(),
+          country: country.trim(),
+          ratingStat: double.tryParse(ratingStat
+                  .replaceAll('Rating is ', '')
+                  .trim()
+                  .split(' ')[0]) ??
+              0,
+          clientTotalExpenditure: amountSpent.replaceAll('spent', '').trim(),
+          budget: sm?[2]
+                  .replaceAll('-', '')
+                  .replaceAll('Est. Budget: ', '')
+                  .replaceAll('Est. Time: ', '')
+                  .trim() ??
+              '',
           skills: skills,
-          proposals: proposals,
+          proposals: proposals.replaceAll('Proposals: ', '').trim(),
+          dateTime: _getDuration(time),
         );
 
         jobList.add(newJob);
       }
+
       return jobList.reversed.toList();
     } catch (e) {
       throw CustomException('An error occured');
@@ -86,4 +108,93 @@ class ScraperService {
   }
 
   // TODO: implement freelancer scraping too
+}
+
+DateTime? _getDuration(String timeAgo) {
+  final tA = timeAgo.replaceAll('ago', '');
+  bool c(String v) => tA.contains(v);
+  int? removeAndConvert(String time, String remove) {
+    final tVariable = time.replaceAll(remove, '');
+    return int.tryParse(tVariable);
+  }
+
+  if (c('second')) {
+    return DateTime.now().subtract(
+      const Duration(seconds: 1),
+    );
+  } else if (c('seconds')) {
+    final duration = removeAndConvert(tA, 'seconds');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(seconds: duration),
+      );
+    }
+  } else if (c('minute')) {
+    return DateTime.now().subtract(
+      const Duration(minutes: 1),
+    );
+  } else if (c('minutes')) {
+    final duration = removeAndConvert(tA, 'minutes');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(minutes: duration),
+      );
+    }
+  } else if (c('hour')) {
+    return DateTime.now().subtract(
+      const Duration(hours: 1),
+    );
+  } else if (c('hours')) {
+    final duration = removeAndConvert(tA, 'hours');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(hours: duration),
+      );
+    }
+  } else if (c('yesterday')) {
+    return DateTime.now().subtract(
+      const Duration(days: 1),
+    );
+  } else if (c('days')) {
+    final duration = removeAndConvert(tA, 'days');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(days: duration),
+      );
+    }
+  } else if (c('week')) {
+    return DateTime.now().subtract(
+      const Duration(days: 7),
+    );
+  } else if (c('weeks')) {
+    final duration = removeAndConvert(tA, 'weeks');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(days: 7 * duration),
+      );
+    }
+  } else if (c('month')) {
+    return DateTime.now().subtract(
+      const Duration(days: 30),
+    );
+  } else if (c('months')) {
+    final duration = removeAndConvert(tA, 'months');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(days: 30 * duration),
+      );
+    }
+  } else if (c('quarter')) {
+    return DateTime.now().subtract(
+      const Duration(days: 90),
+    );
+  } else if (c('quarters')) {
+    final duration = removeAndConvert(tA, 'quarters');
+    if (duration != null) {
+      return DateTime.now().subtract(
+        Duration(days: 90 * duration),
+      );
+    }
+  }
+  return null;
 }

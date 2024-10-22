@@ -14,9 +14,7 @@ import 'test_helpers.mocks.dart';
   MockSpec<BottomSheetService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<DialogService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<ScraperService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<ApiService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<JobService>(onMissingStub: OnMissingStub.returnDefault),
-  MockSpec<NotificationService>(onMissingStub: OnMissingStub.returnDefault),
   MockSpec<LocalDbService>(onMissingStub: OnMissingStub.returnDefault),
 // @stacked-mock-spec
 ])
@@ -25,19 +23,9 @@ void registerServices() {
   getAndRegisterBottomSheetService();
   getAndRegisterDialogService();
   getAndRegisterScraperService();
-  getAndRegisterApiService();
   getAndRegisterJobService();
-  getAndRegisterNotificationService();
-  getAndRegisterNotificationService();
   getAndRegisterLocalDbService();
 // @stacked-mock-register
-}
-
-MockNavigationService getAndRegisterNavigationService() {
-  _removeRegistrationIfExists<NavigationService>();
-  final service = MockNavigationService();
-  locator.registerSingleton<NavigationService>(service);
-  return service;
 }
 
 MockBottomSheetService getAndRegisterBottomSheetService<T>({

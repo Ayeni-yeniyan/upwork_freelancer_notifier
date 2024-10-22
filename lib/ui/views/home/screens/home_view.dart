@@ -37,10 +37,4 @@ class HomeView extends StatelessWidget {
     //   ),
     // );
   }
-
-  @override
-  HomeViewModel viewModelBuilder(
-    BuildContext context,
-  ) =>
-      locator<HomeViewModel>();
 }

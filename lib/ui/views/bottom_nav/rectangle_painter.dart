@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notifyme/core/theme/app_pallete.dart';
 
 class RectangleWithCircularCutWidget extends StatelessWidget {
   const RectangleWithCircularCutWidget({super.key});
@@ -12,11 +13,10 @@ class RectangleWithCircularCutWidget extends StatelessWidget {
 }
 
 class RectangleWithCircularCutPainter extends CustomPainter {
-  final Color rectangleColor;
+  final Color rectangleColor = AppPallete.bottomNavColor;
   final double circleRadius;
 
   RectangleWithCircularCutPainter({
-    this.rectangleColor = Colors.white,
     this.circleRadius = 40,
   });
 

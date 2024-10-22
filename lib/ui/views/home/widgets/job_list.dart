@@ -21,25 +21,38 @@ class JobListWidget extends StatelessWidget {
       builder: (context, viewModel, child) {
         return SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Job List'),
+                const SizedBox(height: 10),
+                const Text(
+                  'Job List',
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // const SizedBox(height: 10),
                 const Text(
                   'Get the latest job updates on your Upwork right here, right now.',
+                  style: TextStyle(fontSize: 12),
                 ),
-                const Text(
-                  'sort by | Time',
-                ), //payment verified,amount spent,budget
-                const SizedBox(height: 10),
+                // const Text(
+                //   'sort by | Time',
+                //   style: TextStyle(fontSize: 12),
+                // ), //payment verified,amount spent,budget
+                const SizedBox(height: 15),
+                const SearchWidget(),
+                const SizedBox(height: 15),
                 Expanded(
                   child: ListView.separated(
                     itemCount: viewModel.jobsList.isEmpty
                         ? 0
                         : viewModel.jobsList.length,
-                    itemBuilder: (context, index) =>
-                        JobTile(viewModel.jobsList[index]),
+                    itemBuilder: (context, index) => JobTile(
+                      viewModel.jobsList[index],
+                    ),
                     separatorBuilder: (context, index) => verticalSpaceSmall,
                   ),
                 ),
@@ -48,6 +61,29 @@ class JobListWidget extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class SearchWidget extends StatelessWidget {
+  const SearchWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+          filled: true,
+          fillColor: AppPallete.jobTileColor,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50),
+            borderSide: BorderSide.none,
+          ),
+          prefixIcon: const Icon(
+            Icons.search,
+          ),
+          hintText: 'Search jobs...'),
     );
   }
 }
