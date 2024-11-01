@@ -12,6 +12,9 @@ import 'package:notifyme/services/local_db_service.dart';
 import 'package:notifyme/ui/dialogs/loading/loading_dialog.dart';
 import 'package:notifyme/ui/views/bottom_nav/bottom_nav_view.dart';
 import 'package:notifyme/ui/views/profile/profile_view.dart';
+import 'package:notifyme/ui/dialogs/activate_scrapper/activate_scrapper_dialog.dart';
+import 'package:notifyme/ui/dialogs/action_required/action_required_dialog.dart';
+import 'package:notifyme/ui/dialogs/sign_in_upwork/sign_in_upwork_dialog.dart';
 // @stacked-import
 
 @StackedApp(
@@ -35,11 +38,14 @@ import 'package:notifyme/ui/views/profile/profile_view.dart';
   ],
   bottomsheets: [
     StackedBottomsheet(classType: NoticeSheet),
-    // @stacked-bottom-sheet
+// @stacked-bottom-sheet
   ],
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
     StackedDialog(classType: LoadingDialog),
+    StackedDialog(classType: ActivateScrapperDialog),
+    StackedDialog(classType: ActionRequiredDialog),
+    StackedDialog(classType: SignInUpworkDialog),
 // @stacked-dialog
   ],
 )

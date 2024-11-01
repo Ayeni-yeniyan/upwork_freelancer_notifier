@@ -67,33 +67,38 @@ const JobSchema = CollectionSchema(
       name: r'jobType',
       type: IsarType.string,
     ),
-    r'paymentStat': PropertySchema(
+    r'notifId': PropertySchema(
       id: 10,
+      name: r'notifId',
+      type: IsarType.long,
+    ),
+    r'paymentStat': PropertySchema(
+      id: 11,
       name: r'paymentStat',
       type: IsarType.string,
     ),
     r'proposals': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'proposals',
       type: IsarType.string,
     ),
     r'ratingStat': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'ratingStat',
       type: IsarType.double,
     ),
     r'skills': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'skills',
       type: IsarType.stringList,
     ),
     r'time': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'time',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'title',
       type: IsarType.string,
     )
@@ -161,12 +166,13 @@ void _jobSerialize(
   writer.writeBool(offsets[7], object.isViewed);
   writer.writeString(offsets[8], object.jobLink);
   writer.writeString(offsets[9], object.jobType);
-  writer.writeString(offsets[10], object.paymentStat);
-  writer.writeString(offsets[11], object.proposals);
-  writer.writeDouble(offsets[12], object.ratingStat);
-  writer.writeStringList(offsets[13], object.skills);
-  writer.writeString(offsets[14], object.time);
-  writer.writeString(offsets[15], object.title);
+  writer.writeLong(offsets[10], object.notifId);
+  writer.writeString(offsets[11], object.paymentStat);
+  writer.writeString(offsets[12], object.proposals);
+  writer.writeDouble(offsets[13], object.ratingStat);
+  writer.writeStringList(offsets[14], object.skills);
+  writer.writeString(offsets[15], object.time);
+  writer.writeString(offsets[16], object.title);
 }
 
 Job _jobDeserialize(
@@ -186,12 +192,13 @@ Job _jobDeserialize(
     isViewed: reader.readBoolOrNull(offsets[7]) ?? false,
     jobLink: reader.readString(offsets[8]),
     jobType: reader.readString(offsets[9]),
-    paymentStat: reader.readString(offsets[10]),
-    proposals: reader.readString(offsets[11]),
-    ratingStat: reader.readDouble(offsets[12]),
-    skills: reader.readStringList(offsets[13]),
-    time: reader.readString(offsets[14]),
-    title: reader.readString(offsets[15]),
+    notifId: reader.readLong(offsets[10]),
+    paymentStat: reader.readString(offsets[11]),
+    proposals: reader.readString(offsets[12]),
+    ratingStat: reader.readDouble(offsets[13]),
+    skills: reader.readStringList(offsets[14]),
+    time: reader.readString(offsets[15]),
+    title: reader.readString(offsets[16]),
   );
   object.id = id;
   return object;
@@ -225,16 +232,18 @@ P _jobDeserializeProp<P>(
     case 9:
       return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 11:
       return (reader.readString(offset)) as P;
     case 12:
-      return (reader.readDouble(offset)) as P;
-    case 13:
-      return (reader.readStringList(offset)) as P;
-    case 14:
       return (reader.readString(offset)) as P;
+    case 13:
+      return (reader.readDouble(offset)) as P;
+    case 14:
+      return (reader.readStringList(offset)) as P;
     case 15:
+      return (reader.readString(offset)) as P;
+    case 16:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1494,6 +1503,58 @@ extension JobQueryFilter on QueryBuilder<Job, Job, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Job, Job, QAfterFilterCondition> notifIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'notifId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Job, Job, QAfterFilterCondition> notifIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'notifId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Job, Job, QAfterFilterCondition> notifIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'notifId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Job, Job, QAfterFilterCondition> notifIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'notifId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Job, Job, QAfterFilterCondition> paymentStatEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -2426,6 +2487,18 @@ extension JobQuerySortBy on QueryBuilder<Job, Job, QSortBy> {
     });
   }
 
+  QueryBuilder<Job, Job, QAfterSortBy> sortByNotifId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notifId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Job, Job, QAfterSortBy> sortByNotifIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notifId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Job, Job, QAfterSortBy> sortByPaymentStat() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'paymentStat', Sort.asc);
@@ -2620,6 +2693,18 @@ extension JobQuerySortThenBy on QueryBuilder<Job, Job, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Job, Job, QAfterSortBy> thenByNotifId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notifId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Job, Job, QAfterSortBy> thenByNotifIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notifId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Job, Job, QAfterSortBy> thenByPaymentStat() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'paymentStat', Sort.asc);
@@ -2752,6 +2837,12 @@ extension JobQueryWhereDistinct on QueryBuilder<Job, Job, QDistinct> {
     });
   }
 
+  QueryBuilder<Job, Job, QDistinct> distinctByNotifId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'notifId');
+    });
+  }
+
   QueryBuilder<Job, Job, QDistinct> distinctByPaymentStat(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2857,6 +2948,12 @@ extension JobQueryProperty on QueryBuilder<Job, Job, QQueryProperty> {
   QueryBuilder<Job, String, QQueryOperations> jobTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'jobType');
+    });
+  }
+
+  QueryBuilder<Job, int, QQueryOperations> notifIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'notifId');
     });
   }
 

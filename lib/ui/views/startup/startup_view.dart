@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:notifyme/core/models/svgs.dart';
+import 'package:notifyme/core/theme/app_pallete.dart';
 import 'package:notifyme/core/theme/app_textstyle.dart';
 import 'package:stacked/stacked.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
@@ -16,31 +18,31 @@ class StartupView extends StackedView<StartupViewModel> {
     Widget? child,
   ) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'NOTIFYME',
-              style: AppTextstyle.labelTextStyle,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Row(),
+          const Spacer(),
+          Image.asset(
+            Images.notifyMEIcon,
+            height: 100,
+            width: 100,
+          ),
+          Text(
+            'notifyME',
+            style: AppTextstyle.labelTextStyle,
+          ),
+          const Spacer(),
+          SizedBox(
+            width: 30,
+            height: 30,
+            child: CircularProgressIndicator(
+              color: AppPallete.gold.withOpacity(0.7),
+              strokeWidth: 5,
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('Loading ...', style: AppTextstyle.bodyTextStyleMedium),
-                horizontalSpaceSmall,
-                const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    color: Colors.black,
-                    strokeWidth: 5,
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
+          ),
+          verticalSpaceLarge
+        ],
       ),
     );
   }

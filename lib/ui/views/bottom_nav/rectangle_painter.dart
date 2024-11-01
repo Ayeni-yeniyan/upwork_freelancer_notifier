@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
 
 class RectangleWithCircularCutWidget extends StatelessWidget {
-  const RectangleWithCircularCutWidget({super.key});
+  final Color color;
+  const RectangleWithCircularCutWidget({super.key, required this.color});
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: RectangleWithCircularCutPainter(),
+      painter: RectangleWithCircularCutPainter(rectangleColor: color),
     );
   }
 }
 
 class RectangleWithCircularCutPainter extends CustomPainter {
-  final Color rectangleColor = AppPallete.bottomNavColor;
+  final Color rectangleColor;
   final double circleRadius;
 
   RectangleWithCircularCutPainter({
     this.circleRadius = 40,
+    required this.rectangleColor,
   });
 
   @override

@@ -5,6 +5,7 @@ part 'job.g.dart';
 @collection
 class Job {
   Id id = Isar.autoIncrement;
+  final int notifId;
   final String description;
   final String jobLink;
   final String title;
@@ -25,6 +26,7 @@ class Job {
   Job({
     required this.description,
     required this.jobLink,
+    required this.notifId,
     required this.title,
     required this.time,
     required this.paymentStat,

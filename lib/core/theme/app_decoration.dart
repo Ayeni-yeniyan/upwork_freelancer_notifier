@@ -3,9 +3,16 @@ import 'package:notifyme/core/theme/app_pallete.dart';
 
 class AppDecoration {
   AppDecoration._();
-  static BoxDecoration get skillDecor =>
-      BoxDecoration(borderRadius: BorderRadius.circular(10));
+  static BoxDecoration get contactDecor => BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: AppPallete.gold,
+          width: 3,
+        ),
+      );
+
   static BoxDecoration get jobTileDecor => BoxDecoration(
-      borderRadius: BorderRadius.circular(5),
-      border: Border.all(color: AppPallete.grey));
+        borderRadius: BorderRadius.circular(5),
+        color: AppPallete.jobTileColorDark,
+      );
 }

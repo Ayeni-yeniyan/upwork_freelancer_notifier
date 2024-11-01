@@ -726,14 +726,14 @@ class MockJobService extends _i1.Mock implements _i9.JobService {
       ) as List<_i8.Job>);
 
   @override
-  _i6.Future<bool> newJobsGotten(String? html) => (super.noSuchMethod(
+  _i6.Future<List<_i8.Job>> newJobsGotten(String? html) => (super.noSuchMethod(
         Invocation.method(
           #newJobsGotten,
           [html],
         ),
-        returnValue: _i6.Future<bool>.value(false),
-        returnValueForMissingStub: _i6.Future<bool>.value(false),
-      ) as _i6.Future<bool>);
+        returnValue: _i6.Future<List<_i8.Job>>.value(<_i8.Job>[]),
+        returnValueForMissingStub: _i6.Future<List<_i8.Job>>.value(<_i8.Job>[]),
+      ) as _i6.Future<List<_i8.Job>>);
 }
 
 /// A class which mocks [LocalDbService].

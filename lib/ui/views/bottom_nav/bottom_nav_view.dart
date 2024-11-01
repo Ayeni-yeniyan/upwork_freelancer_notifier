@@ -1,7 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:notifyme/app/app.dialogs.dart';
+import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
+import 'package:notifyme/ui/views/home/home_viewmodel.dart';
 import 'package:notifyme/ui/views/home/screens/home_view.dart';
+import 'package:notifyme/ui/views/profile/profile_view.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import 'bottom_nav_viewmodel.dart';
 import 'rectangle_painter.dart';
@@ -17,45 +26,79 @@ class BottomNavView extends StackedView<BottomNavViewModel> {
   ) {
     return Scaffold(
       extendBody: true,
-      body: [
-        const HomeView(),
-        Container(
-          color: Colors.red,
-          padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-        ),
-      ][viewModel.selectedIndex],
+      // bottomSheet: viewModel.bannerAd != null
+      //     ? Container(
+      //         padding: const EdgeInsets.symmetric(vertical: 10),
+      //         child: SizedBox(
+      //           width: viewModel.bannerAd!.size.width.toDouble(),
+      //           height: viewModel.bannerAd!.size.height.toDouble(),
+      //           child: AdWidget(ad: viewModel.bannerAd!),
+      //         ),
+      //       )
+      //     : null,
+      body: IndexedStack(
+        index: viewModel.selectedIndex,
+        children: const [
+          HomeView(),
+          ProfileView(),
+        ],
+      ),
       bottomNavigationBar: SizedBox(
         height: 80,
         child: Stack(
           alignment: Alignment.center,
           clipBehavior: Clip.none,
           children: [
-            const Positioned(
+            Positioned(
               bottom: 0,
               left: 0,
               right: 0,
-              child: RectangleWithCircularCutWidget(),
+              child: RectangleWithCircularCutWidget(
+                color:
+                    Theme.of(context).bottomNavigationBarTheme.backgroundColor!,
+              ),
             ),
             Positioned(
               bottom: 50,
-              child: GestureDetector(
-                // Add switch on logic
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppPallete.white.withOpacity(0.3),
-                      width: 4,
+              child: ViewModelBuilder<HomeViewModel>.reactive(
+                viewModelBuilder: () => locator<HomeViewModel>(),
+                disposeViewModel: false,
+                builder: (context, homeviewModel, child) {
+                  return GestureDetector(
+                    onTap: () {
+                      locator<DialogService>().showCustomDialog(
+                        variant: DialogType.activateScrapper,
+                      );
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppPallete.white.withOpacity(0.3),
+                          width: 4,
+                        ),
+                        color: (homeviewModel.upworkActive
+                                ? AppPallete.green
+                                : AppPallete.red)
+                            .withOpacity(0.5),
+                      ),
+                      child: homeviewModel.upworkActive
+                          ? const Icon(
+                              Icons.power_settings_new,
+                              size: 32,
+                            )
+                          : Transform.rotate(
+                              angle: pi,
+                              child: const Icon(
+                                Icons.power_settings_new,
+                                size: 32,
+                              ),
+                            ),
                     ),
-                    color: AppPallete.red.withOpacity(0.5),
-                  ),
-                  child: const Icon(
-                    Icons.power_settings_new,
-                    size: 32,
-                  ),
-                ),
+                  );
+                },
               ),
             ),
             Positioned(
@@ -91,6 +134,11 @@ class BottomNavView extends StackedView<BottomNavViewModel> {
     BuildContext context,
   ) =>
       BottomNavViewModel();
+
+  // @override
+  // void onViewModelReady(BottomNavViewModel viewModel) =>
+  //     SchedulerBinding.instance
+  //         .addPostFrameCallback((timeStamp) => viewModel.loadAds());
 }
 
 class _BottomNavIcon extends StatelessWidget {
@@ -107,7 +155,7 @@ class _BottomNavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const clr = Colors.lightBlue;
+    final clr = AppPallete.purple;
     const sclr = Colors.grey;
     return Expanded(
       child: GestureDetector(

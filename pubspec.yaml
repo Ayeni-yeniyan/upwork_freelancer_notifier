@@ -17,15 +17,18 @@ dependencies:
   # stacked framework
   stacked: ^3.4.0
   stacked_services: ^1.1.0
+  stacked_themes: ^0.3.13
   # webscraping service  
   beautiful_soup_dart: ^0.3.0
   # admob
   # Notification
   flutter_local_notifications: ^17.2.2
   # crashanalytics
+  firebase_crashlytics: ^4.1.3
+  firebase_analytics: ^11.3.3
   # webview
-  # webview_flutter: ^4.9.0 #only supports android and ios
-  flutter_inappwebview: ^6.0.0 # extends support to web too
+  webview_flutter: ^4.9.0 #only supports android and ios
+  # flutter_inappwebview: ^6.0.0 # extends support to web too
   # firebase backend
   firebase_core: ^3.3.0
   firebase_auth: ^5.1.4
@@ -37,11 +40,28 @@ dependencies:
   # local database
   isar: *isar_version
   isar_flutter_libs: *isar_version
+  shared_preferences: ^2.3.2
   path_provider: ^2.0.15
   # Svg asset
   flutter_svg: ^2.0.10+1
   # Star rating package
   flutter_rating_stars: ^1.1.0
+  # Animation
+  show_up_animation: ^2.0.0
+  # Audio service
+  just_audio: ^0.9.41
+  # File picker
+  file_picker: ^8.1.3
+  # Url launcher
+  url_launcher: ^6.3.1
+  # Google Admob
+  google_mobile_ads: ^5.2.0
+  # Group list
+  # grouped_list: ^6.0.0
+  # Toast service
+  fluttertoast: ^8.2.8
+  # Internationalisation 
+  intl: ^0.19.0
 
 
 dev_dependencies:
@@ -56,6 +76,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/sounds/
   fonts:
     - family: Poppins
       fonts:
@@ -63,6 +84,9 @@ flutter:
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Black.ttf
         - asset: assets/fonts/Poppins-BlackItalic.ttf
+          style: italic
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-MediumItalic.ttf
           style: italic
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700

@@ -1,16 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:notifyme/core/models/job.dart';
 import 'package:notifyme/core/models/svgs.dart';
 import 'package:notifyme/core/theme/app_decoration.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
-import 'package:notifyme/ui/common/ui_helpers.dart';
 import 'package:notifyme/ui/views/shared/screens/webview_screen.dart';
+import 'package:stacked_themes/stacked_themes.dart';
 
-class JobTile extends StatelessWidget {
+class JobTile extends StatefulWidget {
   final Job jobMobel;
   const JobTile(this.jobMobel, {super.key});
+
+  @override
+  State<JobTile> createState() => _JobTileState();
+}
+
+class _JobTileState extends State<JobTile> {
+  updateUiTimer() async {
+    final timeInWords = _getTimeStringName(widget.jobMobel.dateTime!);
+    if (timeInWords.contains('second')) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) {
+        setState(() {});
+      }
+      updateUiTimer();
+    }
+    if (timeInWords.contains('minute')) {
+      await Future.delayed(const Duration(minutes: 1));
+      if (mounted) {
+        setState(() {});
+      }
+      updateUiTimer();
+    }
+    if (timeInWords.contains('hour')) {
+      await Future.delayed(const Duration(hours: 1));
+      if (mounted) {
+        setState(() {});
+      }
+      updateUiTimer();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,23 +51,19 @@ class JobTile extends StatelessWidget {
           useSafeArea: true,
           enableDrag: true,
           builder: (context) {
-            return JobDetailsPopUp(jobMobel);
+            return JobDetailsPopUp(widget.jobMobel);
           },
         );
       },
       child: Material(
-        elevation: 5,
+        elevation: 1,
         borderRadius: BorderRadius.circular(5),
         child: Container(
           height: 100,
           width: double.infinity,
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            color: AppPallete.jobTileColor,
-            border: Border.all(
-              color: AppPallete.jobTileBorder,
-            ),
+          decoration: AppDecoration.jobTileDecor.copyWith(
+            color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
@@ -50,7 +75,9 @@ class JobTile extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    'assets/images/upwork_white.png',
+                    getThemeManager(context).isDarkMode
+                        ? Images.upworkLogo
+                        : Images.upworkLogoBlack,
                     fit: BoxFit.contain,
                   )
                   //  SvgPicture.asset(Svgs.upworkLogo),
@@ -61,7 +88,7 @@ class JobTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      jobMobel.title,
+                      widget.jobMobel.title,
                       maxLines: 2,
                     ),
                     Expanded(
@@ -70,20 +97,21 @@ class JobTile extends StatelessWidget {
                         child: Row(
                           children: [
                             SkillWrapper(
-                              text: 'Job budget: ${jobMobel.budget}',
+                              text: 'Job budget: ${widget.jobMobel.budget}',
                             ),
                             SkillWrapper(
-                              text: 'Payment plan: ${jobMobel.jobType}',
-                            ),
-                            SkillWrapper(
-                              text: 'Job level: ${jobMobel.contractorTier}',
-                            ),
-                            SkillWrapper(
-                              text: 'Payment: ${jobMobel.paymentStat}',
+                              text: 'Payment plan: ${widget.jobMobel.jobType}',
                             ),
                             SkillWrapper(
                               text:
-                                  'Client Total Expentiture: ${jobMobel.clientTotalExpenditure}',
+                                  'Job level: ${widget.jobMobel.contractorTier}',
+                            ),
+                            SkillWrapper(
+                              text: 'Payment: ${widget.jobMobel.paymentStat}',
+                            ),
+                            SkillWrapper(
+                              text:
+                                  'Client Total Expentiture: ${widget.jobMobel.clientTotalExpenditure}',
                             ),
                           ],
                         ),
@@ -92,20 +120,20 @@ class JobTile extends StatelessWidget {
                   ],
                 ),
               ),
-              if (jobMobel.dateTime != null)
+              if (widget.jobMobel.dateTime != null)
                 Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _getTimeString(jobMobel.dateTime!),
+                        _getTimeString(widget.jobMobel.dateTime!),
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(_getTimeStringName(jobMobel.dateTime!)),
+                      Text(_getTimeStringName(widget.jobMobel.dateTime!)),
                       const Text('ago'),
                     ],
                   ),
@@ -142,26 +170,42 @@ String _getTimeString(DateTime dateTime) {
 }
 
 String _getTimeStringName(DateTime dateTime) {
-  final durationInSeconds = DateTime.now().difference(dateTime).inSeconds;
-
   final duration = DateTime.now().difference(dateTime);
-  if ((duration.inDays) > 30) {
+  if ((duration.inDays) >= 30) {
     // months
+    if (duration.inDays == 30) {
+      return 'month';
+    }
     return 'months';
-  } else if ((duration.inDays) > 7) {
+  } else if ((duration.inDays) >= 7) {
     // weeks
+    if (duration.inDays == 7) {
+      return 'week';
+    }
     return 'weeks';
   } else if (duration.inDays > 0) {
     // days
+    if (duration.inDays == 1) {
+      return 'day';
+    }
     return 'days';
   } else if (duration.inHours > 0) {
     // hours
+    if (duration.inHours == 1) {
+      return 'hour';
+    }
     return 'hours';
   } else if (duration.inMinutes > 0) {
     // minutes
+    if (duration.inMinutes == 1) {
+      return 'minute';
+    }
     return 'minutes';
   } else {
     // seconds
+    if (duration.inSeconds == 1) {
+      return 'second';
+    }
     return 'seconds';
   }
 }
@@ -186,7 +230,7 @@ class JobDetailsPopUp extends StatelessWidget {
       ) {
         return Container(
           width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.85,
+          // height: MediaQuery.of(context).size.height * 0.85,
           padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -197,7 +241,9 @@ class JobDetailsPopUp extends StatelessWidget {
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: AppPallete.white,
+                  color: getThemeManager(context).isDarkMode
+                      ? AppPallete.white
+                      : AppPallete.jobTileColorDark,
                 ),
               ),
               const SizedBox(height: 10),
@@ -234,6 +280,9 @@ class JobDetailsPopUp extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text('Posted ${_getTimeString(_job.dateTime!)} '
+                          '${_getTimeStringName(_job.dateTime!)} ago'),
+                      const SizedBox(height: 10),
                       Text(
                         _job.description,
                         softWrap: true,
@@ -241,7 +290,6 @@ class JobDetailsPopUp extends StatelessWidget {
                           fontSize: 16,
                         ),
                       ),
-                      // const SizedBox(height: 20),
                       const Padding(
                         padding: EdgeInsets.only(left: 5, top: 10),
                         child: Text('Skills'),
@@ -257,55 +305,33 @@ class JobDetailsPopUp extends StatelessWidget {
                         child: Text('Job details'),
                       ),
                       ColoredContainer(
-                        widget: Row(
+                        widget: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Job type',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  'Job level',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  'Job Budget/Time',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  'Proposals',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                              ],
+                            _TextRow(
+                              header: 'Payment type',
+                              content: _job.jobType,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(_job.jobType),
-                                const SizedBox(height: 5),
-                                Text(_job.contractorTier),
-                                const SizedBox(height: 5),
-                                Text(_job.budget),
-                                const SizedBox(height: 5),
-                                Text(_job.proposals),
-                              ],
+                            const SizedBox(height: 5),
+                            _TextRow(
+                              header: 'Job level',
+                              content: _job.contractorTier,
+                            ),
+                            const SizedBox(height: 5),
+                            _TextRow(
+                              header: 'Job Budget/Time',
+                              content: _job.budget,
+                            ),
+                            const SizedBox(height: 5),
+                            _TextRow(
+                              header: 'Proposals',
+                              content: _job.proposals,
+                            ),
+                            const SizedBox(height: 5),
+                            _TextRow(
+                              header: 'Payment status',
+                              content: _job.paymentStat,
                             ),
                           ],
                         ),
@@ -315,51 +341,28 @@ class JobDetailsPopUp extends StatelessWidget {
                         child: Text('Client details'),
                       ),
                       ColoredContainer(
-                        widget: Row(
+                        widget: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Client rating',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  'Client total Expenditure',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  'Client country',
-                                  style: TextStyle(
-                                    color: AppPallete.white.withOpacity(0.5),
-                                  ),
-                                ),
-                              ],
+                            _TextRow(
+                              header: 'Client rating',
+                              widget: RatingStars(
+                                value: _job.ratingStat,
+                                starSize: 12,
+                                starColor: AppPallete.gold,
+                                valueLabelVisibility: false,
+                              ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                RatingStars(
-                                  value: _job.ratingStat,
-                                  starSize: 12,
-                                  starColor: AppPallete.gold,
-                                  valueLabelVisibility: false,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(_job.clientTotalExpenditure),
-                                const SizedBox(height: 5),
-                                Text(_job.country),
-                              ],
+                            const SizedBox(height: 5),
+                            _TextRow(
+                              header: 'Client total Expenditure',
+                              content: _job.clientTotalExpenditure,
+                            ),
+                            const SizedBox(height: 5),
+                            _TextRow(
+                              header: 'Client country',
+                              content: _job.country,
                             ),
                           ],
                         ),
@@ -372,6 +375,45 @@ class JobDetailsPopUp extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _TextRow extends StatelessWidget {
+  final String header;
+  final String? content;
+  final Widget? widget;
+  const _TextRow({
+    required this.header,
+    this.content,
+    this.widget,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          header,
+          style: TextStyle(
+            color: getThemeManager(context).isDarkMode
+                ? AppPallete.white.withOpacity(0.3)
+                : AppPallete.black.withOpacity(0.5),
+          ),
+        ),
+        const SizedBox(width: 10),
+        if (widget != null) widget!,
+        if (content != null)
+          Expanded(
+            child: Text(
+              content!,
+              textAlign: TextAlign.end,
+              maxLines: 2,
+              softWrap: true,
+            ),
+          ),
+      ],
     );
   }
 }
@@ -390,7 +432,7 @@ class ColoredContainer extends StatelessWidget {
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: AppPallete.appbarColor,
+        color: Theme.of(context).cardColor,
       ),
       child: widget,
     );
@@ -420,7 +462,9 @@ class SkillWrapper extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: color,
         border: Border.all(
-          color: AppPallete.white.withOpacity(0.3),
+          color: getThemeManager(context).isDarkMode
+              ? AppPallete.white.withOpacity(0.3)
+              : AppPallete.black.withOpacity(0.5),
         ),
       ),
       child: Text(

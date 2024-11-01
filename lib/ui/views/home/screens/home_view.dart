@@ -13,28 +13,17 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-        //  Scaffold(
-        //   body:
-        ViewModelBuilder<HomeViewModel>.reactive(
-            viewModelBuilder: () => locator<HomeViewModel>(),
-            disposeViewModel: false,
-            builder: (context, viewModel, child) {
-              return IndexedStack(
-                index: viewModel.index,
-                children: const [
-                  JobListWidget(),
-                  WebviewWidget(),
-                ],
-              );
-            });
-    //   floatingActionButton: FloatingActionButton(
-    //     onPressed: viewModel.changeIndex,
-    //     backgroundColor: AppPallete.green,
-    //     child: const FaIcon(
-    //       FontAwesomeIcons.firefoxBrowser,
-    //     ),
-    //   ),
-    // );
+    return ViewModelBuilder<HomeViewModel>.reactive(
+        viewModelBuilder: () => locator<HomeViewModel>(),
+        disposeViewModel: false,
+        builder: (context, viewModel, child) {
+          return IndexedStack(
+            index: viewModel.index,
+            children: [
+              const JobListWidget(),
+              if (viewModel.upworkActive) const WebviewWidget(), //UpworkWebview
+            ],
+          );
+        });
   }
 }

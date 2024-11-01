@@ -4,6 +4,7 @@ import 'package:notifyme/core/logger.dart';
 import 'package:notifyme/core/models/job.dart';
 
 class ScraperService {
+  final List<String> _processedJobs = [];
   Future<List<Job>> upworkScrapper(String html) async {
     infoLog('Started scrapper');
     try {
@@ -70,35 +71,39 @@ class ScraperService {
                 .find('small', class_: 'd-inline-block mr-3x text-light pr-3')
                 ?.text ??
             'error';
-        final newJob = Job(
-          description:
-              description.replaceAll(' more  about "$title"', '').trim(),
-          jobLink: jobLink.trim(),
-          jobType: sm?[0].trim() ?? '',
-          contractorTier: sm?[1].replaceAll('-', '').trim() ?? '',
-          clientStat: budget.trim(),
-          title: title.trim(),
-          time: time.trim(),
-          paymentStat: paymentStat.trim(),
-          country: country.trim(),
-          ratingStat: double.tryParse(ratingStat
-                  .replaceAll('Rating is ', '')
-                  .trim()
-                  .split(' ')[0]) ??
-              0,
-          clientTotalExpenditure: amountSpent.replaceAll('spent', '').trim(),
-          budget: sm?[2]
-                  .replaceAll('-', '')
-                  .replaceAll('Est. Budget: ', '')
-                  .replaceAll('Est. Time: ', '')
-                  .trim() ??
-              '',
-          skills: skills,
-          proposals: proposals.replaceAll('Proposals: ', '').trim(),
-          dateTime: _getDuration(time),
-        );
+        if (!_processedJobs.any((e) => e.trim() == jobLink.trim())) {
+          _processedJobs.add(jobLink);
+          final newJob = Job(
+            notifId: jobList.length + 1,
+            description:
+                description.replaceAll(' more  about "$title"', '').trim(),
+            jobLink: jobLink.trim(),
+            jobType: sm?[0].trim() ?? '',
+            contractorTier: sm?[1].replaceAll('-', '').trim() ?? '',
+            clientStat: budget.trim(),
+            title: title.trim(),
+            time: time.trim(),
+            paymentStat: paymentStat.trim(),
+            country: country.trim(),
+            ratingStat: double.tryParse(ratingStat
+                    .replaceAll('Rating is ', '')
+                    .trim()
+                    .split(' ')[0]) ??
+                0,
+            clientTotalExpenditure: amountSpent.replaceAll('spent', '').trim(),
+            budget: sm?[2]
+                    .replaceAll('-', '')
+                    .replaceAll('Est. Budget: ', '')
+                    .replaceAll('Est. Time: ', '')
+                    .trim() ??
+                '',
+            skills: skills,
+            proposals: proposals.replaceAll('Proposals: ', '').trim(),
+            dateTime: _getDuration(time),
+          );
 
-        jobList.add(newJob);
+          jobList.add(newJob);
+        }
       }
 
       return jobList.reversed.toList();
@@ -110,7 +115,7 @@ class ScraperService {
   // TODO: implement freelancer scraping too
 }
 
-DateTime? _getDuration(String timeAgo) {
+DateTime _getDuration(String timeAgo) {
   final tA = timeAgo.replaceAll('ago', '');
   bool c(String v) => tA.contains(v);
   int? removeAndConvert(String time, String remove) {
@@ -118,20 +123,16 @@ DateTime? _getDuration(String timeAgo) {
     return int.tryParse(tVariable);
   }
 
-  if (c('second')) {
-    return DateTime.now().subtract(
-      const Duration(seconds: 1),
-    );
-  } else if (c('seconds')) {
+  if (c('seconds')) {
     final duration = removeAndConvert(tA, 'seconds');
     if (duration != null) {
       return DateTime.now().subtract(
         Duration(seconds: duration),
       );
     }
-  } else if (c('minute')) {
+  } else if (c('second')) {
     return DateTime.now().subtract(
-      const Duration(minutes: 1),
+      const Duration(seconds: 1),
     );
   } else if (c('minutes')) {
     final duration = removeAndConvert(tA, 'minutes');
@@ -140,9 +141,9 @@ DateTime? _getDuration(String timeAgo) {
         Duration(minutes: duration),
       );
     }
-  } else if (c('hour')) {
+  } else if (c('minute')) {
     return DateTime.now().subtract(
-      const Duration(hours: 1),
+      const Duration(minutes: 1),
     );
   } else if (c('hours')) {
     final duration = removeAndConvert(tA, 'hours');
@@ -151,6 +152,10 @@ DateTime? _getDuration(String timeAgo) {
         Duration(hours: duration),
       );
     }
+  } else if (c('hour')) {
+    return DateTime.now().subtract(
+      const Duration(hours: 1),
+    );
   } else if (c('yesterday')) {
     return DateTime.now().subtract(
       const Duration(days: 1),
@@ -162,10 +167,6 @@ DateTime? _getDuration(String timeAgo) {
         Duration(days: duration),
       );
     }
-  } else if (c('week')) {
-    return DateTime.now().subtract(
-      const Duration(days: 7),
-    );
   } else if (c('weeks')) {
     final duration = removeAndConvert(tA, 'weeks');
     if (duration != null) {
@@ -173,9 +174,9 @@ DateTime? _getDuration(String timeAgo) {
         Duration(days: 7 * duration),
       );
     }
-  } else if (c('month')) {
+  } else if (c('week')) {
     return DateTime.now().subtract(
-      const Duration(days: 30),
+      const Duration(days: 7),
     );
   } else if (c('months')) {
     final duration = removeAndConvert(tA, 'months');
@@ -184,9 +185,9 @@ DateTime? _getDuration(String timeAgo) {
         Duration(days: 30 * duration),
       );
     }
-  } else if (c('quarter')) {
+  } else if (c('month')) {
     return DateTime.now().subtract(
-      const Duration(days: 90),
+      const Duration(days: 30),
     );
   } else if (c('quarters')) {
     final duration = removeAndConvert(tA, 'quarters');
@@ -195,6 +196,10 @@ DateTime? _getDuration(String timeAgo) {
         Duration(days: 90 * duration),
       );
     }
+  } else if (c('quarter')) {
+    return DateTime.now().subtract(
+      const Duration(days: 90),
+    );
   }
-  return null;
+  return DateTime.now();
 }
