@@ -4,6 +4,11 @@ import 'package:notifyme/services/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AudioService {
+  AudioService._();
+  static const _defaultSound = 'assets/sounds/notif.mp3';
+  static String? _selectedSoundFilePath;
+  static const _audioValueList = 'SELECTEDAUDIO';
+  static String? selectedSoundName;
   static late SharedPreferences _sharedPreferences;
   static init(SharedPreferences sharedPreferences) {
     _sharedPreferences = sharedPreferences;
@@ -14,11 +19,6 @@ class AudioService {
     }
   }
 
-  AudioService._();
-  static const _defaultSound = 'assets/sounds/notif.mp3';
-  static String? _selectedSoundFilePath;
-  static const _audioValueList = 'SELECTEDAUDIO';
-  static String? selectedSoundName;
   static playNotifSound() async {
     try {
       final player = AudioPlayer();
@@ -31,6 +31,7 @@ class AudioService {
       await player.play();
       await player.dispose();
     } catch (e) {
+      _sharedPreferences.remove(_audioValueList);
       debugPrint('Error from [playNotifSound]: $e');
     }
   }

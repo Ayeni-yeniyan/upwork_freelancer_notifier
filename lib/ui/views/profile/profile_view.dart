@@ -170,6 +170,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                     // inactiveTrackColor: AppPallete.white,
                     onChanged: (val) {
                       getThemeManager(context).toggleDarkLightTheme();
+                      locator<HomeViewModel>().stateSetter();
                       viewModel.stateSetter();
                     },
                   ),
@@ -189,29 +190,14 @@ class ProfileView extends StackedView<ProfileViewModel> {
                   text: 'Go Pro',
                   action: () {
                     //  Go pro logic
-                    // Fluttertoast.showToast(
-                    //   msg: 'Coming soon...',
-                    //   toastLength: Toast.LENGTH_SHORT,
-                    //   gravity: ToastGravity.SNACKBAR,
-                    //   timeInSecForIosWeb: 1,
-                    //   backgroundColor: AppPallete.green,
-                    //   textColor: AppPallete.white,
-                    //   fontSize: 16.0,
-                    // );
-                    NotificationService.showNotification(
-                      id: 1,
-                      title: 'This is the title',
-                      body: 'This is the notif body',
-                    );
-                    NotificationService.showNotification(
-                      id: 2,
-                      title: 'This is the title1',
-                      body: 'This is the notif body',
-                    );
-                    NotificationService.showNotification(
-                      id: 3,
-                      title: 'This is the title1',
-                      body: 'This is the notif body',
+                    Fluttertoast.showToast(
+                      msg: 'Coming soon...',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.SNACKBAR,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: AppPallete.green,
+                      textColor: AppPallete.white,
+                      fontSize: 16.0,
                     );
                   },
                 ),

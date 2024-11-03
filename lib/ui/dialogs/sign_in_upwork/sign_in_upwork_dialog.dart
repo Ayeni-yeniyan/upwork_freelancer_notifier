@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notifyme/core/app_strings.dart';
 import 'package:notifyme/core/models/svgs.dart';
+import 'package:notifyme/core/theme/app_pallete.dart';
 import 'package:notifyme/ui/common/app_colors.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 import 'package:notifyme/ui/views/shared/screens/webview_screen.dart';
@@ -41,7 +42,13 @@ class SignInUpworkDialog extends StackedView<SignInUpworkDialogModel> {
               width: 100,
             ),
             const SizedBox(height: 10),
-            const Text('You need to login to your Upwork!'),
+            Text(
+              'You need to login to your Upwork!',
+              style: TextStyle(
+                color: AppPallete.black,
+                fontSize: 16,
+              ),
+            ),
             verticalSpaceMedium,
             GestureDetector(
               onTap: () {
@@ -51,6 +58,7 @@ class SignInUpworkDialog extends StackedView<SignInUpworkDialogModel> {
                   MaterialPageRoute(
                     builder: (context) => const WebviewScreen(
                       webLink: AppStrings.upworkRecent,
+                      isLogin: true,
                     ),
                   ),
                 );

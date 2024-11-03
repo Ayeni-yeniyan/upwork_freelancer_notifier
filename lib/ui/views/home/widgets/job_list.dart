@@ -206,6 +206,7 @@ class SearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: locator<HomeViewModel>().searchCtrl,
       onChanged: locator<HomeViewModel>().onChanged,
       decoration: InputDecoration(
         filled: true,

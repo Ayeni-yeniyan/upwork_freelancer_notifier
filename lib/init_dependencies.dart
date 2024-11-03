@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:notifyme/services/audio_service.dart';
 import 'package:notifyme/ui/views/startup/startup_viewmodel.dart';
 import 'package:notifyme/ui/views/update/update_viewmodel.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_themes/stacked_themes.dart';
@@ -33,6 +34,7 @@ Future<void> initDependencies() async {
   await ThemeManager.initialise();
   // Admob init
   MobileAds.instance.initialize();
+  Permission.notification.request();
 
   // my dependecies
   NotificationService.initNotification();

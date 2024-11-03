@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:notifyme/app/app.dialogs.dart';
-import 'package:notifyme/app/app.locator.dart';
-import 'package:stacked_services/stacked_services.dart';
+import 'package:notifyme/core/app_strings.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebviewScreen extends StatefulWidget {
   final String webLink;
-  const WebviewScreen({super.key, required this.webLink});
+  final bool isLogin;
+  const WebviewScreen({
+    super.key,
+    required this.webLink,
+    this.isLogin = false,
+  });
 
   @override
   State<WebviewScreen> createState() => _WebviewScreenState();
@@ -19,6 +22,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
   @override
   void initState() {
     controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (progress) {
@@ -28,6 +32,11 @@ class _WebviewScreenState extends State<WebviewScreen> {
                 setState(() {});
               }
             });
+          },
+          onUrlChange: (change) {
+            if (change.url == AppStrings.upworkRecent && widget.isLogin) {
+              Navigator.pop(context);
+            }
           },
         ),
       )
@@ -41,7 +50,7 @@ class _WebviewScreenState extends State<WebviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NotifyME'),
+        title: const Text('notifyME'),
       ),
       body: Column(
         children: [

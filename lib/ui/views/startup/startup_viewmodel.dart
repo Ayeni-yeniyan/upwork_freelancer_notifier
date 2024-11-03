@@ -3,7 +3,6 @@ import 'package:notifyme/app/app.dialogs.dart';
 import 'package:notifyme/core/repo/firebase_repo.dart';
 import 'package:notifyme/services/api_service.dart';
 import 'package:notifyme/ui/views/startup/onboarding_screen.dart';
-import 'package:notifyme/ui/views/update/update_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 import 'package:notifyme/app/app.locator.dart';
@@ -26,7 +25,7 @@ class StartupViewModel extends BaseViewModel {
 
     res.fold(
       (l) {
-        _navigator.navigateToUpdateView();
+        _navigator.replaceWithUpdateView();
       },
       (right) async {
         final updateRes = await _repo.getUpdate();
@@ -34,19 +33,17 @@ class StartupViewModel extends BaseViewModel {
           (l) {},
           (r) {
             if (r) {
-              // final isFirstOpen = _sharedPreferences.getBool(_isFirstOpen);
-              if (
-                  // isFirstOpen == null
-                  true) {
+              final isFirstOpen = _sharedPreferences.getBool(_isFirstOpen);
+              if (isFirstOpen == null) {
                 StackedService.navigatorKey?.currentState
-                    ?.push(MaterialPageRoute(
+                    ?.pushReplacement(MaterialPageRoute(
                   builder: (context) => const OnboardingScreen(),
                 ));
               } else {
                 _navigator.replaceWithBottomNavView();
               }
             } else {
-              _navigator.navigateToUpdateView();
+              _navigator.replaceWithUpdateView();
             }
           },
         );
@@ -57,20 +54,9 @@ class StartupViewModel extends BaseViewModel {
   navOnFirstOpen() async {
     await _sharedPreferences.setBool(_isFirstOpen, false);
     _navigator.replaceWithBottomNavView();
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     _dialogService.showCustomDialog(
       variant: DialogType.signInUpwork,
     );
   }
-
-  // // Place anything here that needs to happen before we get into the application
-  // Future runStartupLogic() async {
-  //   await Future.delayed(const Duration(seconds: 5));
-
-  //   // // This is where you can make decisions on where your app should navigate when
-  //   // // you have custom startup logic
-
-  //   _navigationService.replaceWithBottomNavView();
-  //   // locator<UpdateViewModel>().getUpdate();
-  // }
 }

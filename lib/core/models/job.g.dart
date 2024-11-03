@@ -114,7 +114,7 @@ const JobSchema = CollectionSchema(
   getId: _jobGetId,
   getLinks: _jobGetLinks,
   attach: _jobAttach,
-  version: '3.1.0',
+  version: '3.1.0+1',
 );
 
 int _jobEstimateSize(

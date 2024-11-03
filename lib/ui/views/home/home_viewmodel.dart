@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/app_strings.dart';
 import 'package:notifyme/core/logger.dart';
@@ -26,7 +27,7 @@ class HomeViewModel extends BaseViewModel {
   final _notifString = 'ENABLE_NOTIFICATION';
   final SharedPreferences _sharedPreferences;
   HomeViewModel(this._sharedPreferences) {
-    _enableNofif = _sharedPreferences.getBool(_notifString) ?? true;
+    _enableNofif = _sharedPreferences.getBool(_notifString) ?? false;
     _enableSound = _sharedPreferences.getBool(_notifSoundString) ?? true;
   }
 
@@ -79,9 +80,17 @@ class HomeViewModel extends BaseViewModel {
 
   late bool _enableNofif;
   bool get enableNofif => _enableNofif;
-  setNotifStat(bool? newStat) {
+  setNotifStat(bool? newStat) async {
     if (newStat != null) {
-      _sharedPreferences.setBool(_notifString, newStat);
+      var status = await Permission.notification.status;
+      if (status.isDenied) {
+        final sta = await Permission.notification.request();
+        await _sharedPreferences.setBool(_notifString, !sta.isDenied);
+        if (sta.isDenied) {
+          return;
+        }
+      }
+      await _sharedPreferences.setBool(_notifString, newStat);
       _enableNofif = newStat;
       rebuildUi();
     }
@@ -136,10 +145,12 @@ class HomeViewModel extends BaseViewModel {
     //       e.jobType.trim().toLowerCase() == 'Hourly'.trim().toLowerCase()));
     // }
     if (searchCtrl.text.isNotEmpty) {
-      _jobService.jobList.where((e) => e.title
-          .toLowerCase()
-          .trim()
-          .contains(searchCtrl.text.toLowerCase().trim()));
+      return _jobService.jobList
+          .where((e) => e.title
+              .toLowerCase()
+              .trim()
+              .contains(searchCtrl.text.toLowerCase().trim()))
+          .toList();
     }
 
     return _jobService.jobList;
@@ -248,6 +259,13 @@ class HomeViewModel extends BaseViewModel {
             errorLog('Auth requested');
           },
           onPageFinished: (url) async {
+            if (url == AppStrings.upworklogin) {
+              toggleUpworkActive();
+              _dialogService.showCustomDialog(
+                variant: DialogType.signInUpwork,
+              );
+              errorLog('url is login');
+            }
             if (url == _selectedUrl) {
               await wcontroller.scrollBy(0, 150);
               await Future.delayed(const Duration(seconds: 3), () {});
@@ -263,9 +281,7 @@ class HomeViewModel extends BaseViewModel {
               displayLog('url correct');
             } else {
               toggleUpworkActive();
-              _dialogService.showCustomDialog(
-                variant: DialogType.actionRequired,
-              );
+
               errorLog('url is not correct');
             }
           },
@@ -376,6 +392,10 @@ class HomeViewModel extends BaseViewModel {
   }
 
   void onChanged(String? value) {
+    rebuildUi();
+  }
+
+  void stateSetter() {
     rebuildUi();
   }
 
