@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background/flutter_background.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,8 +30,47 @@ class HomeViewModel extends BaseViewModel {
   HomeViewModel(this._sharedPreferences) {
     _enableNofif = _sharedPreferences.getBool(_notifString) ?? false;
     _enableSound = _sharedPreferences.getBool(_notifSoundString) ?? true;
+    initNotif();
+  }
+  initNotif() async {
+    if (_sharedPreferences.getBool(_notifString) == null) {
+      final status = await Permission.notification.status;
+      setNotifStat(status.isGranted);
+    }
   }
 
+  Future<bool> initBackGroungService() async {
+    final androidConfig = FlutterBackgroundAndroidConfig(
+      notificationTitle: 'notifyME Job service',
+      notificationText: "Running Upwork job service...",
+      notificationIcon: AndroidResource(name: 'logo'),
+      showBadge: true,
+      shouldRequestBatteryOptimizationsOff: true,
+      notificationImportance: AndroidNotificationImportance.max,
+      enableWifiLock: true,
+    );
+    try {
+      bool hasPermissions =
+          await FlutterBackground.initialize(androidConfig: androidConfig);
+      return hasPermissions;
+    } catch (e) {
+      debugPrint('Error from initBackGroungService');
+    }
+    return false;
+  }
+
+  Future<void> enableBackgroundService() async {
+    final hasPermissions = await initBackGroungService();
+
+    if (hasPermissions) {
+      // bool success =
+      await FlutterBackground.enableBackgroundExecution();
+    }
+  }
+
+  Future<void> disableBackgroundService() async {
+    await FlutterBackground.disableBackgroundExecution();
+  }
   // bool _addLoaded = false;
   // NativeAd? _nativeAd;
   // NativeAd? get nativeAds {
@@ -82,10 +122,10 @@ class HomeViewModel extends BaseViewModel {
   bool get enableNofif => _enableNofif;
   setNotifStat(bool? newStat) async {
     if (newStat != null) {
-      var status = await Permission.notification.status;
+      final status = await Permission.notification.status;
       if (status.isDenied) {
         final sta = await Permission.notification.request();
-        await _sharedPreferences.setBool(_notifString, !sta.isDenied);
+        // await _sharedPreferences.setBool(_notifString, sta.isGranted);
         if (sta.isDenied) {
           return;
         }
@@ -244,6 +284,7 @@ class HomeViewModel extends BaseViewModel {
   // }
 
   void onUpworkWebviewInit() async {
+    await enableBackgroundService();
     wcontroller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(
@@ -300,7 +341,7 @@ class HomeViewModel extends BaseViewModel {
             if (_timer != null && _enableNofif) {
               for (var element in newJobsList) {
                 NotificationService.showNotification(
-                  id: element.id,
+                  id: element.notifId,
                   title: element.title,
                   body:
                       '${element.paymentStat}, Job budget/Time: ${element.budget}, '
@@ -326,8 +367,9 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Timer? _timer;
-  void cancelTimer() {
+  void cancelTimer() async {
     _timer?.cancel();
+    disableBackgroundService();
   }
 
   void _activateTimer() {

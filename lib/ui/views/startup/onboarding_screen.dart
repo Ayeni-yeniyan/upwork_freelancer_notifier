@@ -36,7 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     return Column(
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 5,
                           child: Container(
                             width: double.infinity,
                             height: double.infinity,
@@ -58,6 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         ),
                         Expanded(
+                          flex: 3,
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Column(

@@ -221,8 +221,8 @@ class JobDetailsPopUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.6,
-      maxChildSize: 0.9,
+      initialChildSize: 0.5,
+      maxChildSize: 0.7,
       minChildSize: 0.3,
       builder: (
         context,
