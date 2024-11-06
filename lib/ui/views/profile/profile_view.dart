@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/app_strings.dart';
 import 'package:notifyme/core/enums/upwork_url.dart';
 import 'package:notifyme/core/models/svgs.dart';
 import 'package:notifyme/core/theme/app_decoration.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
-import 'package:notifyme/services/notification_service.dart';
+import 'package:notifyme/services/toast_service.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 import 'package:notifyme/ui/views/home/home_viewmodel.dart';
 import 'package:notifyme/ui/views/profile/notification_settings.dart';
@@ -20,7 +19,7 @@ import 'profile_viewmodel.dart';
 import 'widgets/profile_tile.dart';
 
 class ProfileView extends StackedView<ProfileViewModel> {
-  const ProfileView({Key? key}) : super(key: key);
+  const ProfileView({super.key});
 
   @override
   Widget builder(
@@ -190,15 +189,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                   text: 'Go Pro',
                   action: () {
                     //  Go pro logic
-                    Fluttertoast.showToast(
-                      msg: 'Coming soon...',
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.SNACKBAR,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: AppPallete.green,
-                      textColor: AppPallete.white,
-                      fontSize: 16.0,
-                    );
+                    ToastService.showSuccessSnackbar('Coming soon...');
                   },
                 ),
                 ShowUpAnimation(

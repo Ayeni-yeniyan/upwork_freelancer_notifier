@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/app_strings.dart';
@@ -12,16 +10,12 @@ import 'package:notifyme/core/models/job.dart';
 import 'package:notifyme/core/utils.dart';
 import 'package:notifyme/services/audio_service.dart';
 import 'package:notifyme/services/job_service.dart';
-// import 'package:notifyme/app/app.bottomsheets.dart';
 import 'package:notifyme/app/app.dialogs.dart';
 import 'package:notifyme/services/notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:notifyme/ui/common/app_strings.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
-// import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _notifSoundString = 'ENABLE_NOTIFICATION_SOUND';
@@ -39,41 +33,11 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  Future<bool> initBackGroungService() async {
-    // final androidConfig = FlutterBackgroundAndroidConfig(
-    //   notificationTitle: 'notifyME Job service',
-    //   notificationText: "Running Upwork job service...",
-    //   notificationIcon: AndroidResource(name: 'logo'),
-    //   notificationImportance: AndroidNotificationImportance.max,
-    // );
-    // try {
-    //   bool hasPermissions = await FlutterBackground.initialize(
-    //     androidConfig: androidConfig,
-    //   );
-    //   return hasPermissions;
-    // } catch (e) {
-    //   debugPrint('Error from initBackGroungService');
-    // }
-    return false;
-  }
-
   Future<void> enableBackgroundService() async {
-    // final hasPermissions = await initBackGroungService();
-
-    // if (hasPermissions) {
-    //   // bool success =
-    //   await FlutterBackground.enableBackgroundExecution();
-    // }
-    // if (await NotificationService.service.isRunning()) {
-    //   return;
-    // }
-    Logger().wtf('object');
     await NotificationService.service.startService();
   }
 
   Future<void> disableBackgroundService() async {
-    // await FlutterBackground.disableBackgroundExecution();
-
     final service = NotificationService.service;
     service.invoke('stopService');
   }
@@ -114,12 +78,12 @@ class HomeViewModel extends BaseViewModel {
 
   bool _upworkActive = false;
   bool get upworkActive => _upworkActive;
-  toggleUpworkActive() async {
-    _upworkActive = !_upworkActive;
-    if (!_upworkActive) {
-      cancelTimer();
-    } else {
+  toggleUpworkActive(bool value) async {
+    _upworkActive = value;
+    if (_upworkActive) {
       onUpworkWebviewInit();
+    } else {
+      cancelTimer();
     }
     rebuildUi();
   }
@@ -269,26 +233,6 @@ class HomeViewModel extends BaseViewModel {
     }
   }
 
-  // get getUpworkController => _upWorkcontroller;
-  // void setUpworkController(InAppWebViewController controller) async {
-  //   if (_timer == null) {
-  //     setCurrentIndex = 1;
-  //     // await Future.delayed(const Duration(seconds: 1), () {
-  //     //   _dialogService.showCustomDialog(
-  //     //     variant: DialogType.loading,
-  //     //   );
-  //     // });
-  //   }
-  //   displayLog(await controller.getHtml() ?? 'Html string empty');
-  //   displayLog('setting controller');
-  //   _upWorkcontroller = controller;
-  //   if (_upWorkcontroller == null) {
-  //     errorLog('setting controller failed');
-  //   } else {
-  //     infoLog('setting controller Successful');
-  //   }
-  // }
-
   Future<void> onUpworkWebviewInit() async {
     enableBackgroundService();
     wcontroller
@@ -299,26 +243,31 @@ class HomeViewModel extends BaseViewModel {
       ..setNavigationDelegate(
         NavigationDelegate(
           onHttpAuthRequest: (request) {
-            toggleUpworkActive();
+            toggleUpworkActive(false);
             _dialogService.showCustomDialog(
               variant: DialogType.actionRequired,
             );
             errorLog('Auth requested');
           },
           onPageFinished: (url) async {
-            if (url == AppStrings.upworklogin) {
-              toggleUpworkActive();
+            if (url.contains(AppStrings.upworklogin)) {
+              if (_timer == null) {
+                _dialogService.completeDialog(DialogResponse());
+              }
+              setCurrentIndex = 0;
+              toggleUpworkActive(false);
               _dialogService.showCustomDialog(
                 variant: DialogType.signInUpwork,
               );
               errorLog('url is login');
+              return;
             }
             if (url == _selectedUrl) {
               await wcontroller.scrollBy(0, 150);
-              await Future.delayed(const Duration(seconds: 3), () {});
+              await Future.delayed(const Duration(seconds: 3));
               await wcontroller.runJavaScript(
                   "(function(){Flutter.postMessage(window.document.body.innerHTML)})();");
-              await Future.delayed(const Duration(seconds: 2), () {});
+              await Future.delayed(const Duration(seconds: 2));
               if (_timer == null) {
                 displayLog('Completing scrap');
                 _dialogService.completeDialog(DialogResponse());
@@ -327,12 +276,15 @@ class HomeViewModel extends BaseViewModel {
               }
               displayLog('url correct');
             } else {
-              toggleUpworkActive();
-              errorLog('url is not correct');
-            }
-            if (_timer == null) {
-              _dialogService.completeDialog(DialogResponse());
+              if (_timer == null) {
+                _dialogService.completeDialog(DialogResponse());
+              }
               setCurrentIndex = 0;
+              toggleUpworkActive(false);
+              _dialogService.showCustomDialog(
+                variant: DialogType.actionRequired,
+              );
+              errorLog('url is not correct');
             }
           },
           onHttpError: (error) {},
@@ -389,53 +341,6 @@ class HomeViewModel extends BaseViewModel {
       wcontroller.loadRequest(Uri.parse(_selectedUrl));
     });
   }
-
-  // void onLoadCompleteUpwork(
-  //     InAppWebViewController controller, WebUri? uri) async {
-  //   final scroll = await controller.getContentHeight() ?? 100;
-  //   //  (await controller.getScrollY()) ?? 0 + 100;
-  //   // await controller.scrollBy(x: 0, y: scroll, animated: true);
-  //   await controller.scrollTo(x: 0, y: scroll ~/ 20, animated: true);
-  //   await Future.delayed(const Duration(seconds: 3));
-  //   final htmlText = await controller.getHtml();
-  //   displayLog(uri?.rawValue.toString());
-  //   // _upWorkcontroller = controller;
-  //   if (uri!.rawValue == _selectedUrl) {
-  //     final newJobsList = await _jobService.newJobsGotten(htmlText ?? '');
-  //     if (newJobsList.isNotEmpty) {
-  //       // _jobsList.addAll(newJobsAvailable);
-  //       rebuildUi();
-  //       if (_timer != null && _enableNofif) {
-  //         for (var element in newJobsList) {
-  //           NotificationService.showNotification(
-  //             id: element.id,
-  //             title: element.title,
-  //             body: 'This is the notif body',
-  //             payload: 'What is a payload',
-  //           );
-  //         }
-  //       }
-  //       if (_enableSound) {
-  //         AudioService.playNotifSound();
-  //       }
-  //     } else {
-  //       displayLog('No Job updates.');
-  //     }
-  //     displayLog('url correct');
-  //   } else {
-  //     _dialogService.showCustomDialog(
-  //       variant: DialogType.actionRequired,
-  //     );
-  //     errorLog('url is not correct');
-  //   }
-  //   if (_timer == null) {
-  //     _activateTimer();
-  //     _dialogService.completeDialog(DialogResponse());
-  //     displayLog('current $_index');
-  //     setCurrentIndex = 0;
-  //     displayLog('new $_index');
-  //   }
-  // }
 
   int _index = 0;
   int get index => _index;

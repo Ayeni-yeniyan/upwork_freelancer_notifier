@@ -47,11 +47,7 @@
             </intent-filter>
         </activity>
         <!-- Adapt to the foreground service type(s) desired, these are just examples -->
-        <service
-            android:name="de.julianassmann.flutter_background.IsolateHolderService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync|specialUse" /> 
-        <service
+            <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
             android:foregroundServiceType="dataSync|specialUse"
         />

@@ -59,7 +59,5 @@ _initHome() async {
 
 _initFirebaseMessaging() async {
   await FirebaseMessaging.instance.requestPermission();
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  print('object');
-  print(fcmToken);
+// await FirebaseMessaging.instance.getToken();
 }

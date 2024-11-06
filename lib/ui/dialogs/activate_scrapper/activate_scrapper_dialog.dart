@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/models/svgs.dart';
-import 'package:notifyme/ui/common/app_colors.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 import 'package:notifyme/ui/views/home/home_viewmodel.dart';
-import 'package:notifyme/ui/views/home/screens/home_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -45,7 +43,7 @@ class ActivateScrapperDialog extends StackedView<ActivateScrapperDialogModel> {
             GestureDetector(
               onTap: () {
                 completer(DialogResponse(confirmed: true));
-                locator<HomeViewModel>().toggleUpworkActive();
+                locator<HomeViewModel>().toggleUpworkActive(true);
               },
               child: Container(
                 height: 50,

@@ -9,7 +9,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 class NotificationService {
   NotificationService._();
-
+  static const _notificationChannelId = 'notifyME-ForegroundService';
   @pragma('vm:entry-point')
   static void onStart(ServiceInstance service) async {
     // Only available for flutter 3.0.0 and later
@@ -42,6 +42,13 @@ class NotificationService {
       onDidReceiveNotificationResponse: onReceiveNotif,
       onDidReceiveBackgroundNotificationResponse: onReceiveNotif,
     );
+    await _notifPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(AndroidNotificationChannel(
+          _notificationChannelId,
+          'my_foreground_service',
+        ));
     await service.configure(
       iosConfiguration: IosConfiguration(),
       androidConfiguration: AndroidConfiguration(
@@ -52,10 +59,10 @@ class NotificationService {
         ],
         autoStart: false,
         isForegroundMode: true,
-        notificationChannelId: 'notifyME-ForegroundService',
+        notificationChannelId: _notificationChannelId,
         initialNotificationTitle: 'NotifyME Job Service',
         initialNotificationContent: 'Running Upwork job service...',
-        foregroundServiceNotificationId: 888,
+        foregroundServiceNotificationId: -888,
       ),
     );
   }
