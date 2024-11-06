@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_background/flutter_background.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,7 +38,8 @@ Future<void> initDependencies() async {
   Permission.notification.request();
 
   // my dependecies
-  NotificationService.initNotification();
+  await NotificationService.initNotification();
+  await _initFirebaseMessaging();
 
   _initHome();
   _initUpdate();
@@ -54,4 +55,11 @@ _initHome() async {
   AudioService.init(prefs);
   StartupViewModel.init(prefs);
   locator.registerLazySingleton(() => HomeViewModel(prefs));
+}
+
+_initFirebaseMessaging() async {
+  await FirebaseMessaging.instance.requestPermission();
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print('object');
+  print(fcmToken);
 }

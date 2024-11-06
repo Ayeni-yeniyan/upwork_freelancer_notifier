@@ -88,10 +88,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     );
                   },
                 ),
-                if (index == onboardingContent.length - 1)
-                  Positioned(
-                    bottom: 20,
-                    right: 20,
+                Positioned(
+                  bottom: 20,
+                  right: 20,
+                  child: AnimatedOpacity(
+                    opacity: index == onboardingContent.length - 1 ? 1 : 0,
+                    duration: Durations.medium4,
                     child: GestureDetector(
                       child: Container(
                         padding: EdgeInsets.all(0),
@@ -110,6 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ),
                   ),
+                ),
                 Positioned(
                   bottom: 45,
                   left: 20,

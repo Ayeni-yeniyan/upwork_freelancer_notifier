@@ -74,7 +74,7 @@ class ScraperService {
         if (!_processedJobs.any((e) => e.trim() == jobLink.trim())) {
           _processedJobs.add(jobLink);
           final newJob = Job(
-            notifId: _processedJobs.length + 3,
+            notifId: _processedJobs.length + 1,
             description:
                 description.replaceAll(' more  about "$title"', '').trim(),
             jobLink: jobLink.trim(),

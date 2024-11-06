@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background/flutter_background.dart';
-// import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/app_strings.dart';
@@ -40,36 +40,42 @@ class HomeViewModel extends BaseViewModel {
   }
 
   Future<bool> initBackGroungService() async {
-    final androidConfig = FlutterBackgroundAndroidConfig(
-      notificationTitle: 'notifyME Job service',
-      notificationText: "Running Upwork job service...",
-      notificationIcon: AndroidResource(name: 'logo'),
-      showBadge: true,
-      shouldRequestBatteryOptimizationsOff: true,
-      notificationImportance: AndroidNotificationImportance.max,
-      enableWifiLock: true,
-    );
-    try {
-      bool hasPermissions =
-          await FlutterBackground.initialize(androidConfig: androidConfig);
-      return hasPermissions;
-    } catch (e) {
-      debugPrint('Error from initBackGroungService');
-    }
+    // final androidConfig = FlutterBackgroundAndroidConfig(
+    //   notificationTitle: 'notifyME Job service',
+    //   notificationText: "Running Upwork job service...",
+    //   notificationIcon: AndroidResource(name: 'logo'),
+    //   notificationImportance: AndroidNotificationImportance.max,
+    // );
+    // try {
+    //   bool hasPermissions = await FlutterBackground.initialize(
+    //     androidConfig: androidConfig,
+    //   );
+    //   return hasPermissions;
+    // } catch (e) {
+    //   debugPrint('Error from initBackGroungService');
+    // }
     return false;
   }
 
   Future<void> enableBackgroundService() async {
-    final hasPermissions = await initBackGroungService();
+    // final hasPermissions = await initBackGroungService();
 
-    if (hasPermissions) {
-      // bool success =
-      await FlutterBackground.enableBackgroundExecution();
-    }
+    // if (hasPermissions) {
+    //   // bool success =
+    //   await FlutterBackground.enableBackgroundExecution();
+    // }
+    // if (await NotificationService.service.isRunning()) {
+    //   return;
+    // }
+    Logger().wtf('object');
+    await NotificationService.service.startService();
   }
 
   Future<void> disableBackgroundService() async {
-    await FlutterBackground.disableBackgroundExecution();
+    // await FlutterBackground.disableBackgroundExecution();
+
+    final service = NotificationService.service;
+    service.invoke('stopService');
   }
   // bool _addLoaded = false;
   // NativeAd? _nativeAd;
@@ -108,7 +114,7 @@ class HomeViewModel extends BaseViewModel {
 
   bool _upworkActive = false;
   bool get upworkActive => _upworkActive;
-  toggleUpworkActive() {
+  toggleUpworkActive() async {
     _upworkActive = !_upworkActive;
     if (!_upworkActive) {
       cancelTimer();
@@ -283,8 +289,8 @@ class HomeViewModel extends BaseViewModel {
   //   }
   // }
 
-  void onUpworkWebviewInit() async {
-    await enableBackgroundService();
+  Future<void> onUpworkWebviewInit() async {
+    enableBackgroundService();
     wcontroller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(
@@ -315,15 +321,18 @@ class HomeViewModel extends BaseViewModel {
               await Future.delayed(const Duration(seconds: 2), () {});
               if (_timer == null) {
                 displayLog('Completing scrap');
-                _activateTimer();
                 _dialogService.completeDialog(DialogResponse());
                 setCurrentIndex = 0;
+                _activateTimer();
               }
               displayLog('url correct');
             } else {
               toggleUpworkActive();
-
               errorLog('url is not correct');
+            }
+            if (_timer == null) {
+              _dialogService.completeDialog(DialogResponse());
+              setCurrentIndex = 0;
             }
           },
           onHttpError: (error) {},
@@ -343,12 +352,15 @@ class HomeViewModel extends BaseViewModel {
                 NotificationService.showNotification(
                   id: element.notifId,
                   title: element.title,
+                  payload: element.jobLink,
                   body:
                       '${element.paymentStat}, Job budget/Time: ${element.budget}, '
                       'Payment type: ${element.jobType}, Job level: ${element.contractorTier}, '
                       'Proposals: ${element.proposals}, Posted: ${FormartUtils.formatDate(element.dateTime!)}',
                 );
               }
+              NotificationService.showSummaryNotification(
+                  jobLength: newJobsList.length);
             }
             if (_timer != null && _enableSound) {
               AudioService.playNotifSound();
