@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:notifyme/app/app.bottomsheets.dart';
-import 'package:notifyme/app/app.dialogs.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/models/svgs.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 import 'package:notifyme/ui/views/home/home_viewmodel.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
-import 'package:stacked_themes/stacked_themes.dart';
 
 import 'job_tile.dart';
 
@@ -34,10 +31,10 @@ class JobListWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Job List',
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 32.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -53,7 +50,7 @@ class JobListWidget extends StatelessWidget {
                               color: AppPallete.green,
                             )),
                             Image.asset(
-                              getThemeManager(context).isDarkMode
+                              Theme.of(context).brightness == Brightness.dark
                                   ? Images.upworkLogo
                                   : Images.upworkLogoBlack,
                               width: 30,
@@ -65,9 +62,9 @@ class JobListWidget extends StatelessWidget {
                   ],
                 ),
                 // const SizedBox(height: 10),
-                const Text(
+                Text(
                   'Get the latest job updates on your Upwork right here, right now.',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12.sp),
                 ),
                 // const Text(
                 //   'sort by | Time',
@@ -268,7 +265,7 @@ class FilterBottomSheet extends StatelessWidget {
                     margin: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: getThemeManager(context).isDarkMode
+                      color: Theme.of(context).brightness == Brightness.dark
                           ? AppPallete.white
                           : AppPallete.jobTileColorDark,
                     ),

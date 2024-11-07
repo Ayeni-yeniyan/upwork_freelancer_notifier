@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notifyme/core/models/job.dart';
 import 'package:notifyme/core/models/svgs.dart';
 import 'package:notifyme/core/theme/app_decoration.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
 import 'package:notifyme/ui/views/shared/screens/webview_screen.dart';
-import 'package:stacked_themes/stacked_themes.dart';
 
 class JobTile extends StatefulWidget {
   final Job jobMobel;
@@ -42,6 +43,13 @@ class _JobTileState extends State<JobTile> {
   }
 
   @override
+  void initState() {
+    SchedulerBinding.instance
+        .addPostFrameCallback((timeStamp) => updateUiTimer());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
@@ -59,7 +67,7 @@ class _JobTileState extends State<JobTile> {
         elevation: 1,
         borderRadius: BorderRadius.circular(5),
         child: Container(
-          height: 100,
+          height: 110.h,
           width: double.infinity,
           padding: const EdgeInsets.all(10),
           decoration: AppDecoration.jobTileDecor.copyWith(
@@ -68,14 +76,14 @@ class _JobTileState extends State<JobTile> {
           child: Row(
             children: [
               Container(
-                  height: 60,
-                  width: 60,
+                  height: 60.h,
+                  width: 60.w,
                   // clipBehavior: Clip.antiAlias,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    getThemeManager(context).isDarkMode
+                    Theme.of(context).brightness == Brightness.dark
                         ? Images.upworkLogo
                         : Images.upworkLogoBlack,
                     fit: BoxFit.contain,
@@ -128,8 +136,8 @@ class _JobTileState extends State<JobTile> {
                     children: [
                       Text(
                         _getTimeString(widget.jobMobel.dateTime!),
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: TextStyle(
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -221,9 +229,9 @@ class JobDetailsPopUp extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       expand: false,
-      initialChildSize: 0.5,
-      maxChildSize: 0.7,
-      minChildSize: 0.3,
+      initialChildSize: 0.6,
+      maxChildSize: 0.8,
+      minChildSize: 0.4,
       builder: (
         context,
         scrollController,
@@ -241,7 +249,7 @@ class JobDetailsPopUp extends StatelessWidget {
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: getThemeManager(context).isDarkMode
+                  color: Theme.of(context).brightness == Brightness.dark
                       ? AppPallete.white
                       : AppPallete.jobTileColorDark,
                 ),
@@ -397,7 +405,7 @@ class _TextRow extends StatelessWidget {
         Text(
           header,
           style: TextStyle(
-            color: getThemeManager(context).isDarkMode
+            color: Theme.of(context).brightness == Brightness.dark
                 ? AppPallete.white.withOpacity(0.3)
                 : AppPallete.black.withOpacity(0.5),
           ),
@@ -462,7 +470,7 @@ class SkillWrapper extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: color,
         border: Border.all(
-          color: getThemeManager(context).isDarkMode
+          color: Theme.of(context).brightness == Brightness.dark
               ? AppPallete.white.withOpacity(0.3)
               : AppPallete.black.withOpacity(0.5),
         ),

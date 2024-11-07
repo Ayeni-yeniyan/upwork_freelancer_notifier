@@ -6,8 +6,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked_annotations.dart';
-import 'package:stacked_themes/stacked_themes.dart';
-
 import 'package:notifyme/services/audio_service.dart';
 import 'package:notifyme/services/notification_service.dart';
 import 'package:notifyme/ui/views/startup/startup_viewmodel.dart';
@@ -16,6 +14,7 @@ import 'package:notifyme/ui/views/update/update_viewmodel.dart';
 import 'core/repo/firebase_repo.dart';
 import 'firebase_options.dart';
 import 'services/api_service.dart';
+import 'ui/theme_manager.dart';
 import 'ui/views/home/home_viewmodel.dart';
 
 final locator = StackedLocator.instance;
@@ -32,7 +31,6 @@ Future<void> initDependencies() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  await ThemeManager.initialise();
   // Admob init
   MobileAds.instance.initialize();
   Permission.notification.request();
@@ -41,17 +39,19 @@ Future<void> initDependencies() async {
   await NotificationService.initNotification();
   await _initFirebaseMessaging();
 
-  _initHome();
-  _initUpdate();
+  await _initHome();
+  await _initUpdate();
 }
 
-_initUpdate() {
+_initUpdate() async {
   locator.registerFactory<ApiService>(() => FirebaseRepo());
   locator.registerLazySingleton(() => UpdateViewModel(locator()));
 }
 
 _initHome() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  locator.registerLazySingleton<SharedPreferences>(() => prefs);
+  ThemeManager.initTheme();
   AudioService.init(prefs);
   StartupViewModel.init(prefs);
   locator.registerLazySingleton(() => HomeViewModel(prefs));

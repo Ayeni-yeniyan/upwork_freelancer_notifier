@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notifyme/core/theme/app_decoration.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
 
@@ -32,7 +33,7 @@ class ProfileTile extends StatelessWidget {
               color: Theme.of(context).cardColor,
             ),
             alignment: Alignment.center,
-            height: 60,
+            height: 70.h,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [

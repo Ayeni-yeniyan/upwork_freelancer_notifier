@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notifyme/app/app.locator.dart';
 import 'package:notifyme/core/app_strings.dart';
 import 'package:notifyme/core/enums/upwork_url.dart';
@@ -7,12 +8,12 @@ import 'package:notifyme/core/theme/app_decoration.dart';
 import 'package:notifyme/core/theme/app_pallete.dart';
 import 'package:notifyme/services/toast_service.dart';
 import 'package:notifyme/ui/common/ui_helpers.dart';
+import 'package:notifyme/ui/theme_manager.dart';
 import 'package:notifyme/ui/views/home/home_viewmodel.dart';
 import 'package:notifyme/ui/views/profile/notification_settings.dart';
 import 'package:notifyme/ui/views/shared/screens/webview_screen.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_themes/stacked_themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'profile_viewmodel.dart';
@@ -32,10 +33,10 @@ class ProfileView extends StackedView<ProfileViewModel> {
       children: [
         Stack(
           children: [
-            const SizedBox(height: 200),
+            SizedBox(height: 250.h),
             Container(
               width: double.infinity,
-              height: 150,
+              height: 200.h,
               clipBehavior: Clip.hardEdge,
               decoration: const BoxDecoration(
                 image: DecorationImage(
@@ -56,8 +57,8 @@ class ProfileView extends StackedView<ProfileViewModel> {
                     width: 3,
                   ),
                 ),
-                child: const CircleAvatar(
-                  radius: 40,
+                child: CircleAvatar(
+                  radius: 40.r,
                   child: Text(
                     'N',
                     style: TextStyle(fontSize: 32),
@@ -73,10 +74,10 @@ class ProfileView extends StackedView<ProfileViewModel> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Bronze Freelancer',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -84,7 +85,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                 Text(
                   'App Settings',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     color: AppPallete.darktext,
                   ),
                 ),
@@ -164,11 +165,11 @@ class ProfileView extends StackedView<ProfileViewModel> {
                 ProfileTile(
                   text: 'Dark mode',
                   widget: Switch.adaptive(
-                    value: getThemeManager(context).isDarkMode,
+                    value: Theme.of(context).brightness == Brightness.dark,
                     // activeColor: AppPallete.grey,
                     // inactiveTrackColor: AppPallete.white,
                     onChanged: (val) {
-                      getThemeManager(context).toggleDarkLightTheme();
+                      ThemeManager().toggleTheme(val);
                       locator<HomeViewModel>().stateSetter();
                       viewModel.stateSetter();
                     },
@@ -178,7 +179,7 @@ class ProfileView extends StackedView<ProfileViewModel> {
                 Text(
                   'Your Account',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     color: AppPallete.darktext,
                   ),
                 ),
